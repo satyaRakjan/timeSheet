@@ -1,0 +1,88 @@
+<mvc:View controllerName="ICS_TimeSheet.ICS_TimeSheet.controller.View3" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m"
+	xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified" xmlns:f="sap.ui.layout.form">
+	<Page id="Page3" title="{view>/session}" showNavButton="true" navButtonPress="onNavBack">
+		<content>
+			<IconTabBar id="idIconTabBarMulti" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding">
+				<items>
+					<IconTabFilter icon="sap-icon://hint">
+						<VBox class="sapUiSmallMargin" backgroundDesign="Solid">
+							<f:SimpleForm id="SimpleFormChange354" editable="true" layout="ResponsiveGridLayout" title="Working Information" labelSpanXL="3"
+								labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0"
+								columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+								<f:content>
+									<Label text="Transaction Date"/>
+									<Input value="{view>/date}" enabled="false"/>
+									<Label text="Session"/>
+									<Input value="{}"/>
+									<Label text="*Charge Type"/>
+									<Input value="{}"/>
+									<Label text="*Charge Sub Type"/>
+									<Input value="{}"/>
+									<VBox class="sapUiSmallMargin">
+										<RadioButton groupName="GroupA" text="Not Specified" selected="true"/>
+										<RadioButton groupName="GroupA" text="Man-Day (Charge)"/>
+										<RadioButton groupName="GroupA" text="Man-Day (Non-Charge)"/>
+									</VBox>
+									<Label text="*Output Type"/>
+									<Input value="{}"/>
+									<Label text="*Output Sub Type"/>
+									<Input value="{}"/>
+									<Label text="*Project Name"/>
+									<Input value="{}"/>
+									<Label text="*Project Note"/>
+									<Input value="{}"/>
+									<Label text="*Supervisor 1"/>
+									<Input value="{}"/>
+									<Label text="*Supervisor 2"/>
+									<Input value="{}"/>
+									<Label text="*Activity"/>
+									<Input value="{}"/>
+								</f:content>
+							</f:SimpleForm>
+						</VBox>
+					</IconTabFilter>
+					<IconTabFilter icon="sap-icon://expense-report">
+						<VBox class="sapUiSmallMargin" backgroundDesign="Solid">
+							<f:SimpleForm id="SimpleFormChange35" editable="true" layout="ResponsiveGridLayout" title="Reimbursement Information" labelSpanXL="3"
+								labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0"
+								columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+								<f:content>
+									<CheckBox text=" Overtime" selected="true"/>
+									<Label text="Overtime Reimbures"/>
+									<Input value=""/>
+									<CheckBox text=" Pre-diem" selected="true"/>
+									<Label text="Pre-diem note"/>
+									<TextArea id="TypeHere" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
+									<CheckBox text=" Accommodation" selected="true"/>
+									<Label text="Accom note"/>
+									<TextArea id="TypeHere2" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
+									<CheckBox text=" Travel Expense" selected="true"/>
+									<Label text="Travel Reimbures"/>
+									<Input value="" description="THB"/>
+									<Label text="Travel note"/>
+									<Input value=""/>
+									<CheckBox text=" Parking Expense" selected="true"/>
+									<Label text="Parking Reimbures"/>
+									<Input value="" description="THB"/>
+									<Label text="Parking note"/>
+									<Input value=""/>
+								</f:content>
+							</f:SimpleForm>
+						</VBox>
+					</IconTabFilter>
+				</items>
+			</IconTabBar>
+		</content>
+		<footer>
+			<OverflowToolbar id="otbFooter">
+				<ToolbarSpacer/>
+				<Button type="Ghost" text="Clear Data">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+				<Button type="Emphasized" text="Save" press="submitTS">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+			</OverflowToolbar>
+		</footer>
+	</Page>
+</mvc:View>

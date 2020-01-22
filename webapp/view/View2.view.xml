@@ -1,0 +1,55 @@
+<mvc:View controllerName="ICS_TimeSheet.ICS_TimeSheet.controller.View2" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout"
+	xmlns:unified="sap.ui.unified" xmlns:core="sap.ui.core">
+	<Page id="Page2" title="Session" showNavButton="true" navButtonPress="onNavBack">
+		<content>
+			<unified:CalendarDateInterval id="calendar" select="handleCalendarSelect" showWeekNumbers="false" days="7" intervalSelection="false"
+				visible="true" width="100%" singleSelection="true">
+				<!--<specialDates>-->
+				<!--	<unified:DateTypeRange  startDate="{startDate}" type="{type}"></unified:DateTypeRange>-->
+				<!--</specialDates>-->
+			</unified:CalendarDateInterval>
+			<List binding="" headerText="" id="sessionList" mode="MultiSelect" backgroundDesign="Transparent" selectionChange="onSelectionChange">
+				<DisplayListItem label="Session ( {view>/selectDate} )" value=""></DisplayListItem>
+			</List>
+			<!--<List binding="" headerText="" mode="MultiSelect" backgroundDesign="Translucent" selectionChange="onSelectionSession">-->
+			<!--	<DisplayListItem id="AM" label="Morning" value="" type="Navigation" press="itemPress"></DisplayListItem>-->
+			<!--	<DisplayListItem id="PM" label="Afternoon" value="" type="Navigation" press="itemPress"></DisplayListItem>-->
+			<!--</List>-->
+			<List headerText="" mode="MultiSelect" selectionChange="onSelectionSession">
+				<CustomListItem id="AM" type="Navigation" press="AMPress">
+					<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+						<items>
+							<Label text="Morning"/>
+							<core:Icon id="AMIcon" size="1.5rem" src="" color="#0D9B2B"/>
+						</items>
+					</FlexBox>
+				</CustomListItem>
+				<CustomListItem id="PM" type="Navigation" press="PMPress">
+					<FlexBox alignItems="Start" justifyContent="SpaceBetween">
+						<items>
+							<Label text="Afternoon"/>
+							<core:Icon id="PMIcon" size="1.5rem" src="" color="#0D9B2B"/>
+						</items>
+					</FlexBox>
+				</CustomListItem>
+			</List>
+		</content>
+		<footer>
+			<OverflowToolbar width="100%" height="auto" design="Auto" enabled="true" visible="true">
+				<ToolbarSpacer/>
+				<Button id="copyBtn" type="Emphasized" text="Copy to" enabled="false" press="copyTo">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+				<Button id="delBtn" type="Negative" icon="" text="Delete" enabled="false">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+				<Button type="Emphasized" text="Activity">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+				<Button type="Ghost" text="Add Special">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+			</OverflowToolbar>
+		</footer>
+	</Page>
+</mvc:View>
