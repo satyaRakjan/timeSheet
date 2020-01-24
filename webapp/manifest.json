@@ -59,12 +59,6 @@
 					"bundleName": "ICS_TimeSheet.ICS_TimeSheet.i18n.i18n"
 				}
 			},
-			"JSON": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {},
-				"preload": false,
-				"uri": "data/data.json"
-			},
 			"Holiday": {
 				"type": "sap.ui.model.json.JSONModel",
 				"settings": {},

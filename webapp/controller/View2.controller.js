@@ -8,59 +8,35 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View2", {
-		onInit: function (oevent) {
-
-			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			this.arr = [];
-			for (var cout in TS) {
-				this.arr.push(TS[cout]);
-			}
-
-			var holiday = this.getOwnerComponent().getModel("Holiday").getProperty("/holidays");
-			var currentYear = new Date().getFullYear();
-			this.holidayArr = [];
-			for (var day in holiday) {
-				this.holidayArr.push(new Date(currentYear, holiday[day].month, holiday[day].startDate).toDateString());
-			}
-
+		onInit: function () {
+			this.holiday = this.getOwnerComponent().getModel("Holiday").getProperty("/year");
+			this.AMIcon = this.byId("AMIcon");
+			this.PMIcon = this.byId("PMIcon");
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView2").attachPatternMatched(this._onObjectMatched, this);
 
-			this._holiday();
-			this.AM = this.byId("AM");
-			this.PM = this.byId("PM");
-			this.copyBtn = this.byId("copyBtn");
-			this.delBtn = this.byId("delBtn");
 		},
 
-		_holiday: function (date) {
-
-			var currentYear = ""
-			if (date) {
-				currentYear = date.getFullYear();
-			} else {
-				currentYear = new Date().getFullYear();
-
-			}
-			var holiday = this.getOwnerComponent().getModel("JSON").getProperty("/appointments");
+		onAfterRendering: function () {
+			var keys = Object.entries(this.holiday[0]);
 			var oCalendar = this.byId("calendar");
-			for (var day in holiday) {
-				oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
-					startDate: new Date(currentYear, holiday[day].month, holiday[day].startDate),
-					endDate: new Date(currentYear, holiday[day].month, holiday[day].endDate),
-					type: sap.ui.unified.CalendarDayType.NonWorking,
-					tooltip: holiday[day].title
-				}));
-
-			}
+			this.specialDate = [];
+			keys.forEach((v) => {
+				v[1].forEach((j) => {
+					var fullDate = j.month + "/" + j.startDate + "/" + v[0];
+					this.specialDate.push(fullDate);
+					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						startDate: new Date(fullDate),
+						endDate: new Date(fullDate),
+						type: sap.ui.unified.CalendarDayType.NonWorking,
+						tooltip: j.title
+					}));
+				})
+			})
 		},
 
 		_onObjectMatched: function (oEvent) {
 			var date = oEvent.getParameter("arguments").getDate;
-			this.getView().bindElement({
-				path: "/" + oEvent.getParameter("arguments").getDate,
-				model: "invoice"
-			});
 			var selectDate = new Date(date);
 			var cal = this.byId("calendar");
 			cal.setStartDate(selectDate);
@@ -78,6 +54,36 @@ sap.ui.define([
 				selectDate: dateFormatted
 			});
 			this.getView().setModel(oViewModel, "view");
+			this.copyBtn = this.byId("copyBtn");
+			this.delBtn = this.byId("delBtn");
+			this.AMIcon.setSrc("")
+			this.PMIcon.setSrc("")
+
+			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var TSkeys = Object.entries(this.TS[0]);
+			TSkeys.forEach((year) => {
+				Object.entries(year[1]).forEach((months) => {
+					Object.entries(months[1]).forEach((month) => {
+						Object.entries(month[1]).forEach((days) => {
+							Object.entries(days[1]).forEach((day) => {
+								Object.entries(day[1]).forEach((sessions) => {
+									Object.entries(sessions[1]).forEach((session) => {
+										var fullDate = new Date(year[0], month[0], day[0]);
+										if (String(fullDate) == String(selectDate)) {
+											this.list = this.byId(session[0] + "Icon");
+											this.list.setSrc("sap-icon://notes")
+											this.handleTS();
+										}
+									})
+								});
+							});
+						});
+					});
+				});
+			})
+
+		},
+		handleTS: function () {
 
 		},
 
@@ -85,10 +91,11 @@ sap.ui.define([
 			var oCalendar = oEvent.getSource(),
 				oSelectedDate = oCalendar.getSelectedDates()[0],
 				oStartDate = oSelectedDate.getStartDate(),
-				array = this.holidayArr,
-				arrDate = oStartDate.toDateString(),
-				result = array.includes(arrDate);
-				console.log(oStartDate);
+				dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+					pattern: "MM/dd/YYYY"
+				}),
+				dateFormatted = dateFormat.format(oStartDate),
+				result = this.specialDate.includes(dateFormatted);
 			if (result == true) {
 				var msg = 'this day is NonWorking.';
 				MessageToast.show(msg);
@@ -109,7 +116,6 @@ sap.ui.define([
 					AMenable = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti"),
 					PMenable = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti"),
 					sessionList = this.byId("sessionList");
-				console.log(sessionList)
 				if (check == true) {
 					var resultTS = array2.filter(ts => ts.ID === dateID);
 					var getDate = new Date(resultTS[0].ID);
@@ -143,20 +149,14 @@ sap.ui.define([
 					PM: PM
 				});
 				this.getView().setModel(oViewModel, "view");
-				this._holiday(oStartDate);
+				// this._holiday(oStartDate);
 			}
 		},
 
 		onNavBack: function () {
-			var oHistory = History.getInstance();
-			var sPreviousHash = oHistory.getPreviousHash();
 
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-				var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-				oRouter.navTo("RouteView1", false);
-			}
+			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			oRouter.navTo("RouteView1", false);
 
 		},
 		AMPress: function (oEvent) {

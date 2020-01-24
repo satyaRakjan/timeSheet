@@ -1,7 +1,7 @@
 {
 	"TS": [{
 		"2020": [{
-			"00": [{
+			"01": [{
 				"15": [{
 					"AM": [{
 						"startDate": "9",
@@ -16,16 +16,14 @@
 					"AM": [{
 						"startDate": "9",
 						"endDate": "12"
-					}]
-				}],
-				"17": [{
+					}],
 					"PM": [{
 						"startDate": "13",
 						"endDate": "18"
 					}]
 				}]
 			}],
-			"01": [{
+			"02": [{
 				"24": [{
 					"AM": [{
 						"startDate": "9",
@@ -38,29 +36,16 @@
 				}]
 			}]
 		}],
-		"2019": [{
-			"00": [{
-				"15": [{
-					"AM": [{
-						"startDate": "9",
-						"endDate": "12"
-					}],
-					"PM": [{
-						"startDate": "13",
-						"endDate": "18"
-					}]
-				}],
-				"16": [{
-					"AM": [{
-						"startDate": "9",
-						"endDate": "12"
-					}],
-					"PM": [{
-						"startDate": "13",
-						"endDate": "18"
-					}]
-				}]
-			}]
+		"ID": 1578934800000,
+		"AM": [{
+			"title": "AM",
+			"startDate": "Tue Jan 14 2020 9:00:00 GMT+0700 (Indochina Time)",
+			"endDate": "Tue Jan 14 2020 12:00:00 GMT+0700 (Indochina Time)"
+		}],
+		"PM": [{
+			"title": "PM",
+			"startDate": "Tue Jan 14 2020 13:00:00 GMT+0700 (Indochina Time)",
+			"endDate": "Tue Jan 14 2020 18:00:00 GMT+0700 (Indochina Time)"
 		}]
 	}]
 }
