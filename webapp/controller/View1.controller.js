@@ -54,7 +54,7 @@ sap.ui.define([
 		handleStartDateChange: function (oEvent) {
 			setTimeout(function () {
 				this.onAfterRendering();
-			}.bind(this), 100);
+			}.bind(this), 0);
 
 		},
 		handleHoliday: function () {

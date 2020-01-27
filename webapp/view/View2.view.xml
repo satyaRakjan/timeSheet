@@ -15,7 +15,7 @@
 			<!--	<DisplayListItem id="AM" label="Morning" value="" type="Navigation" press="itemPress"></DisplayListItem>-->
 			<!--	<DisplayListItem id="PM" label="Afternoon" value="" type="Navigation" press="itemPress"></DisplayListItem>-->
 			<!--</List>-->
-			<List headerText="" mode="MultiSelect" selectionChange="onSelectionSession">
+			<List id="multiSelect" headerText="" mode="MultiSelect" selectionChange="onSelectionSession">
 				<CustomListItem id="AM" type="Navigation" press="AMPress">
 					<FlexBox alignItems="Start" justifyContent="SpaceBetween">
 						<items>

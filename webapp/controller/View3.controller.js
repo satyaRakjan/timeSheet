@@ -71,29 +71,31 @@ sap.ui.define([
 				title = "PM";
 
 			}
+			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var TSkeys = Object.entries(this.TS[0]);
+			console.log(TSkeys);
+			// var oModel = this.getView().getModel("JSON");
+			// var TSdata = {};
 
-			var oModel = this.getView().getModel("JSON");
-			var TSdata = {};
+			// TSdata = {
+			// 	"title": title,
+			// 	"startDate": startDate,
+			// 	"endDate": endDate
+			// };
+			// var addTS = oModel.getProperty("/TS");
 
-			TSdata = {
-				"title": title,
-				"startDate": startDate,
-				"endDate": endDate
-			};
-			var addTS = oModel.getProperty("/TS");
+			// addTS.push(TSdata);
+			// oModel.setProperty("/TS", addTS);
 
-			addTS.push(TSdata);
-			oModel.setProperty("/TS", addTS);
+			// var oHistory = History.getInstance();
+			// var sPreviousHash = oHistory.getPreviousHash();
 
-			var oHistory = History.getInstance();
-			var sPreviousHash = oHistory.getPreviousHash();
-
-			if (sPreviousHash !== undefined) {
-				window.history.go(-1);
-			} else {
-				var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-				oRouter.navTo("RouteView2", false);
-			}
+			// if (sPreviousHash !== undefined) {
+			// 	window.history.go(-1);
+			// } else {
+			// 	var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			// 	oRouter.navTo("RouteView2", false);
+			// }
 
 		},
 
