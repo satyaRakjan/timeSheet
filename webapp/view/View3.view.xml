@@ -1,23 +1,38 @@
 <mvc:View controllerName="ICS_TimeSheet.ICS_TimeSheet.controller.View3" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m"
-	xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified" xmlns:f="sap.ui.layout.form">
+	xmlns:l="sap.ui.layout" xmlns:u="sap.ui.unified" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core">
 	<Page id="Page3" title="{view>/session}" showNavButton="true" navButtonPress="onNavBack">
 		<content>
 			<IconTabBar id="idIconTabBarMulti" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding">
 				<items>
 					<IconTabFilter icon="sap-icon://hint">
 						<VBox class="sapUiSmallMargin" backgroundDesign="Solid">
-							<f:SimpleForm id="SimpleFormChange354" editable="true" layout="ResponsiveGridLayout" title="Working Information" labelSpanXL="3"
-								labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0"
-								columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+							<f:SimpleForm id="SimpleFormChange354" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4"
+								labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+								singleContainerFullSize="false" ariaLabelledBy="Title1">
+								<f:toolbar>
+									<Toolbar id="TB1">
+										<Title id="Title1" text="Working Information"/>
+										<ToolbarSpacer/>
+									</Toolbar>
+								</f:toolbar>
 								<f:content>
 									<Label text="Transaction Date"/>
 									<Input value="{view>/date}" enabled="false"/>
 									<Label text="Session"/>
-									<Input value="{}"/>
+									<Select id="country" selectedKey="{view>/session}">
+										<items>
+											<core:Item text="Morning" key="Morning"/>
+											<core:Item text="Afternoon" key="Afternoon"/>
+										</items>
+									</Select>
+									<!--<Input value="{}"/>-->
 									<Label text="*Charge Type"/>
 									<Input value="{}"/>
 									<Label text="*Charge Sub Type"/>
 									<Input value="{}"/>
+									<Label text="*Transaction Sub Type"/>
+									<Input value="{}"/>
+									<Label text=""/>
 									<VBox class="sapUiSmallMargin">
 										<RadioButton groupName="GroupA" text="Not Specified" selected="true"/>
 										<RadioButton groupName="GroupA" text="Man-Day (Charge)"/>
@@ -27,45 +42,61 @@
 									<Input value="{}"/>
 									<Label text="*Output Sub Type"/>
 									<Input value="{}"/>
+									<core:Title text=""/>
 									<Label text="*Project Name"/>
 									<Input value="{}"/>
 									<Label text="*Project Note"/>
+									<TextArea id="NoteTypeHere" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
+									<Label text="*Service Area"/>
 									<Input value="{}"/>
+									<Label text="*Department Head"/>
+									<Input value="{}" enabled="false"/>
 									<Label text="*Supervisor 1"/>
 									<Input value="{}"/>
 									<Label text="*Supervisor 2"/>
 									<Input value="{}"/>
 									<Label text="*Activity"/>
-									<Input value="{}"/>
+									<TextArea id="NoteTypeHere2" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
 								</f:content>
 							</f:SimpleForm>
 						</VBox>
 					</IconTabFilter>
 					<IconTabFilter icon="sap-icon://expense-report">
 						<VBox class="sapUiSmallMargin" backgroundDesign="Solid">
-							<f:SimpleForm id="SimpleFormChange35" editable="true" layout="ResponsiveGridLayout" title="Reimbursement Information" labelSpanXL="3"
-								labelSpanL="3" labelSpanM="3" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0"
-								columnsXL="1" columnsL="1" columnsM="1" singleContainerFullSize="false">
+							<f:SimpleForm id="SimpleFormChange35" editable="true" layout="ResponsiveGridLayout" labelSpanXL="4" labelSpanL="3" labelSpanM="4"
+								labelSpanS="12" adjustLabelSpan="false" emptySpanXL="0" emptySpanL="4" emptySpanM="0" emptySpanS="0" columnsXL="2" columnsL="1" columnsM="1"
+								singleContainerFullSize="false" ariaLabelledBy="Title1">
+								<f:toolbar>
+									<Toolbar id="TB2">
+										<Title id="Title2" text="Reimbursement Information"/>
+										<ToolbarSpacer/>
+									</Toolbar>
+								</f:toolbar>
 								<f:content>
-									<CheckBox text=" Overtime" selected="true"/>
+									<Label text=""/>
+									<CheckBox text=" Overtime"/>
 									<Label text="Overtime Reimbures"/>
 									<Input value=""/>
-									<CheckBox text=" Pre-diem" selected="true"/>
+									<Label text=""/>
+									<CheckBox text=" Pre-diem"/>
 									<Label text="Pre-diem note"/>
 									<TextArea id="TypeHere" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
-									<CheckBox text=" Accommodation" selected="true"/>
+									<Label text=""/>
+									<CheckBox text=" Accommodation"/>
 									<Label text="Accom note"/>
 									<TextArea id="TypeHere2" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
-									<CheckBox text=" Travel Expense" selected="true"/>
+									<Label text=""/>
+									<CheckBox text=" Travel Expense"/>
 									<Label text="Travel Reimbures"/>
 									<Input value="" description="THB"/>
 									<Label text="Travel note"/>
-									<Input value=""/>
-									<CheckBox text=" Parking Expense" selected="true"/>
+									<TextArea id="TypeHere3" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
+									<Label text=""/>
+									<CheckBox text=" Parking Expense"/>
 									<Label text="Parking Reimbures"/>
 									<Input value="" description="THB"/>
 									<Label text="Parking note"/>
-									<Input value=""/>
+									<TextArea id="TypeHere4" value="" valueLiveUpdate="" liveChange="handleLiveChange"/>
 								</f:content>
 							</f:SimpleForm>
 						</VBox>

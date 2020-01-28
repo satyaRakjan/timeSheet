@@ -17,7 +17,6 @@ sap.ui.define([
 
 			this.date = date;
 			this.session = session;
-
 			var selectDate = new Date(date);
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
@@ -26,7 +25,7 @@ sap.ui.define([
 			var dateFormatted = oDateFormat.format(selectDate);
 
 			var oViewModel = new JSONModel({
-				session: session,
+				session: this.session,
 				date: dateFormatted
 			});
 			this.getView().setModel(oViewModel, "view");
@@ -71,22 +70,30 @@ sap.ui.define([
 				title = "PM";
 
 			}
-			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			var TSkeys = Object.entries(this.TS[0]);
-			console.log(TSkeys);
-			// var oModel = this.getView().getModel("JSON");
-			// var TSdata = {};
+			var year = date.getFullYear();
+			var month = "";
+			var day = date.getDate();
+			if (date.getMonth() > 9) {
+				month = date.getMonth();
+			} else {
+				month = "0" + date.getMonth();
+			}
+			console.log(day)
+			// this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS/0/" + year + "/0/" + month + "/0/"+day);
+			// // var TSkeys = Object.entries(this.TS);
+			// console.log(this.TS);
+			var oModel = this.getView().getModel("timeSheet");
+			
+			var TSdata = {};
 
-			// TSdata = {
-			// 	"title": title,
-			// 	"startDate": startDate,
-			// 	"endDate": endDate
-			// };
-			// var addTS = oModel.getProperty("/TS");
-
-			// addTS.push(TSdata);
-			// oModel.setProperty("/TS", addTS);
-
+			TSdata = {
+				"startDate": startDate,
+				"endDate": endDate
+			};
+			var addTS = oModel.getProperty("/TS");
+			addTS.push(TSdata);
+			oModel.setProperty("/TS/0/" + year + "/0/" + month + "/0/",addTS);
+			console.log(addTS)
 			// var oHistory = History.getInstance();
 			// var sPreviousHash = oHistory.getPreviousHash();
 
@@ -100,11 +107,11 @@ sap.ui.define([
 		},
 
 		onNavBack: function () {
-		
-				var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-				oRouter.navTo("RouteView2", {
-					getDate: this.date
-				});
+
+			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+			oRouter.navTo("RouteView2", {
+				getDate: this.date
+			});
 
 		}
 	});
