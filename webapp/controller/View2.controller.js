@@ -63,8 +63,6 @@ sap.ui.define([
 			this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setSelected(false);
 			this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setEnabled(false);
 			this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setEnabled(false);
-			this.byId("copyBtn").setEnabled(false);
-			this.byId("delBtn").setEnabled(false);
 			this.getView().setModel(oViewModel, "view");
 			var TSkeys = Object.entries(this.TS[0]);
 			TSkeys.forEach((year) => {
@@ -80,8 +78,6 @@ sap.ui.define([
 											this.list.setSrc("sap-icon://notes")
 											this.byId("container-ICS_TimeSheet---View2--" + session[0] + "-selectMulti").setEnabled(true)
 											this.byId("sessionList").setMode("MultiSelect");
-											this.byId("copyBtn").setEnabled(true);
-											this.byId("delBtn").setEnabled(true);
 										}
 									})
 								});
@@ -105,17 +101,13 @@ sap.ui.define([
 			if (result == true) {
 				var msg = 'this day is NonWorking.';
 				MessageToast.show(msg);
-
 			} else {
 				this.timeSheetSelect(selectDate);
 			}
 		},
-
 		onNavBack: function () {
-
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.navTo("RouteView1", false);
-
 		},
 		AMPress: function (oEvent) {
 			var cal = this.byId("calendar");
@@ -124,7 +116,6 @@ sap.ui.define([
 			loRouter.navTo("RouteView3", {
 				session: "Morning",
 				date: date
-
 			});
 		},
 		PMPress: function (oEvent) {
@@ -134,7 +125,6 @@ sap.ui.define([
 			loRouter.navTo("RouteView3", {
 				session: "Afternoon",
 				date: date
-
 			});
 		},
 
@@ -142,8 +132,8 @@ sap.ui.define([
 			var selected = oEvent.getParameter("selected");
 			var cal = this.byId("calendar");
 			var oSelectedDate = cal.getSelectedDates()[0];
-			var selectDate = oSelectedDate.getStartDate();
- 
+			var	selectDate = oSelectedDate.getStartDate();
+
 			var TSkeys = Object.entries(this.TS[0]);
 			if (selected == true) {
 				TSkeys.forEach((year) => {
@@ -167,19 +157,16 @@ sap.ui.define([
 			} else {
 				this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setSelected(false);
 				this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setSelected(false);
-
 			}
 		},
 
 		onSelectionSession: function (oEvent) {
-			console.log(oEvent)
 			if (this.AM.getSelected() == false && this.PM.getSelected() == false) {
 				this.copyBtn.setEnabled(false)
 				this.delBtn.setEnabled(false)
 			} else {
 				this.copyBtn.setEnabled(true)
 				this.delBtn.setEnabled(true)
-
 			}
 
 		},
