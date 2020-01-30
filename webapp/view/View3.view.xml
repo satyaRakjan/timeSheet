@@ -19,7 +19,7 @@
 									<Label text="Transaction Date"/>
 									<Input value="{view>/date}" enabled="false"/>
 									<Label text="Session"/>
-									<Select id="country" selectedKey="{view>/session}">
+									<Select id="country" selectedKey="{view>/session}" change="heandleSession">
 										<items>
 											<core:Item text="Morning" key="Morning"/>
 											<core:Item text="Afternoon" key="Afternoon"/>
@@ -31,7 +31,13 @@
 									<Label text="*Charge Sub Type"/>
 									<Input value="{}"/>
 									<Label text="*Transaction Sub Type"/>
-									<Input value="{}"/>
+									<Select id="status" selectedKey="{view>/status}">
+										<items>
+											<core:Item text="" key=""/>
+											<core:Item text="CO Confirmed" key="Confirmed"/>
+											<core:Item text="Not Confirmed" key="Notconfirmed"/>
+										</items>
+									</Select>
 									<Label text=""/>
 									<VBox class="sapUiSmallMargin">
 										<RadioButton groupName="GroupA" text="Not Specified" selected="true"/>

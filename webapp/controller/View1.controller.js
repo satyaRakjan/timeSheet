@@ -137,7 +137,7 @@ sap.ui.define([
 		handleCell: function (oEvent) {
 			var date = new Date(oEvent.getParameters().startDate);
 			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-				pattern: "YYYYMMdd"
+				pattern: "YYYY/MM/dd"
 			});
 			var dateFormatted = dateFormat.format(date);
 			console.log(dateFormatted)
