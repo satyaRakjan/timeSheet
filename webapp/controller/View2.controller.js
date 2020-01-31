@@ -64,27 +64,23 @@ sap.ui.define([
 			this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setEnabled(false);
 			this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setEnabled(false);
 			this.getView().setModel(oViewModel, "view");
-			var TSkeys = Object.entries(this.TS[0]);
-			TSkeys.forEach((year) => {
-				Object.entries(year[1]).forEach((months) => {
-					Object.entries(months[1]).forEach((month) => {
-						Object.entries(month[1]).forEach((days) => {
-							Object.entries(days[1]).forEach((day) => {
-								Object.entries(day[1]).forEach((sessions) => {
-									Object.entries(sessions[1]).forEach((session) => {
-										var fullDate = new Date(year[0], month[0], day[0]);
-										if (String(fullDate) == String(selectDate)) {
-											this.list = this.byId(session[0] + "Icon");
-											this.list.setSrc("sap-icon://notes")
-											this.byId("container-ICS_TimeSheet---View2--" + session[0] + "-selectMulti").setEnabled(true)
-											this.byId("sessionList").setMode("MultiSelect");
-										}
-									})
-								});
-							});
-						});
-					});
-				});
+			var TS = Object.entries(this.TS);
+			TS.forEach((ts) => {
+				Object.entries(ts[1]["Year"][0]).forEach((year) => {
+					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+							Object.entries(date[1][0]).forEach((session) => {
+								var fullDate = new Date(year[0], month[0], date[0]);
+								if (String(fullDate) == String(selectDate)) {
+									this.list = this.byId(session[0] + "Icon");
+									this.list.setSrc("sap-icon://notes")
+									this.byId("container-ICS_TimeSheet---View2--" + session[0] + "-selectMulti").setEnabled(true)
+									this.byId("sessionList").setMode("MultiSelect");
+								}
+							})
+						})
+					})
+				})
 			})
 
 		},
@@ -132,27 +128,23 @@ sap.ui.define([
 			var selected = oEvent.getParameter("selected");
 			var cal = this.byId("calendar");
 			var oSelectedDate = cal.getSelectedDates()[0];
-			var	selectDate = oSelectedDate.getStartDate();
+			var selectDate = oSelectedDate.getStartDate();
 
-			var TSkeys = Object.entries(this.TS[0]);
+			var TS = Object.entries(this.TS);
 			if (selected == true) {
-				TSkeys.forEach((year) => {
-					Object.entries(year[1]).forEach((months) => {
-						Object.entries(months[1]).forEach((month) => {
-							Object.entries(month[1]).forEach((days) => {
-								Object.entries(days[1]).forEach((day) => {
-									Object.entries(day[1]).forEach((sessions) => {
-										Object.entries(sessions[1]).forEach((session) => {
-											var fullDate = new Date(year[0], month[0], day[0]);
-											if (String(fullDate) == String(selectDate)) {
-												this.byId("container-ICS_TimeSheet---View2--" + session[0] + "-selectMulti").setSelected(true);
-											}
-										})
-									});
-								});
-							});
-						});
-					});
+				TS.forEach((ts) => {
+					Object.entries(ts[1]["Year"][0]).forEach((year) => {
+						Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+							Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+								Object.entries(date[1][0]).forEach((session) => {
+									var fullDate = new Date(year[0], month[0], date[0]);
+									if (String(fullDate) == String(selectDate)) {
+										this.byId("container-ICS_TimeSheet---View2--" + session[0] + "-selectMulti").setSelected(true);
+									}
+								})
+							})
+						})
+					})
 				})
 			} else {
 				this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setSelected(false);

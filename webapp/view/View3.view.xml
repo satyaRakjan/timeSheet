@@ -113,7 +113,7 @@
 		<footer>
 			<OverflowToolbar id="otbFooter">
 				<ToolbarSpacer/>
-				<Button type="Ghost" text="Clear Data">
+				<Button type="Ghost" text="Clear Data" press="ClearTS">
 					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
 				</Button>
 				<Button type="Emphasized" text="Save" press="submitTS">

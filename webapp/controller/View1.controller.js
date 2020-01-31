@@ -10,11 +10,12 @@ sap.ui.define([
 			this.weeknum = document.getElementsByClassName("sapMSPCMonthWeekNumber");
 			this.nonWorking = document.getElementsByClassName('sapMSPCMonthDay nonWorkingTimeframe');
 			this.holiday = this.getOwnerComponent().getModel("Holiday").getProperty("/year");
+			// this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			this.specialDate = [];
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView1").attachPatternMatched(this._onObjectMatched, this);
-			this.handleHoliday();
+			this.handleTimeSheet();
 		},
 
 		onAfterRendering: function () {
@@ -40,15 +41,14 @@ sap.ui.define([
 
 		_onObjectMatched: function (oEvent) {
 			this.weekview();
-			this.handleHoliday();
+			this.handleTimeSheet();
 		},
 
 		timeSheetView: function () {
-			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			var TSkeys = Object.entries(this.TS[0]);
-			TSkeys.forEach((year) => {
-				Object.entries(year[1]).forEach((months) => {
-					Object.entries(months[1]).forEach((month) => {
+			var TSkeys = Object.entries(this.TS);
+			TSkeys.forEach((ts) => {
+				Object.entries(ts[1]["Year"][0]).forEach((year) => {
+					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
 						var checkMonth = parseInt(month[0]) + 1;
 						var getMonth = "";
 						if (checkMonth > 9) {
@@ -56,25 +56,21 @@ sap.ui.define([
 						} else {
 							getMonth = "0" + checkMonth;
 						}
-						Object.entries(month[1]).forEach((days) => {
-							Object.entries(days[1]).forEach((day) => {
-								Object.entries(day[1]).forEach((sessions) => {
-									Object.entries(sessions[1]).forEach((session) => {
-										var fullDate = year[0] + getMonth + day[0];
-										var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
-										if (el) {
-											var conditions = ["AM", "PM"];
-											var hasAll = conditions.every(prop => sessions[1].hasOwnProperty(prop));
-											if(hasAll == true){
-												el.childNodes[2].style.color = 'black';
-											}
-										}
-									})
-								});
-							});
-						});
-					});
-				});
+						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+							Object.entries(date[1][0]).forEach((session) => {
+								var fullDate = year[0] + getMonth + date[0];
+								var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
+								if (el) {
+									var conditions = ["AM", "PM"];
+									var hasAll = conditions.every(prop => date[1][0].hasOwnProperty(prop));
+									if (hasAll == true) {
+										el.childNodes[2].style.color = 'black';
+									}
+								}
+							})
+						})
+					})
+				})
 			})
 		},
 
@@ -107,30 +103,26 @@ sap.ui.define([
 			}
 		},
 
-		handleHoliday: function () {
+		handleTimeSheet: function () {
 			var cal = this.byId("SPC1");
-			var TSkeys = Object.entries(this.TS[0]);
 			cal.removeAllAppointments
-			TSkeys.forEach((year) => {
-				Object.entries(year[1]).forEach((months) => {
-					Object.entries(months[1]).forEach((month) => {
-						Object.entries(month[1]).forEach((days) => {
-							Object.entries(days[1]).forEach((day) => {
-								Object.entries(day[1]).forEach((sessions) => {
-									Object.entries(sessions[1]).forEach((session) => {
-										cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-											startDate: new Date(year[0], month[0], day[0], session[1][0].startDate),
-											endDate: new Date(year[0], month[0], day[0], session[1][0].endDate),
-											title: session[0],
-											tooltip: session[0],
-											type: sap.ui.unified.CalendarDayType.Type08
-										}));
-									})
-								});
-							});
-						});
-					});
-				});
+			var TSkeys = Object.entries(this.TS);
+			TSkeys.forEach((ts) => {
+				Object.entries(ts[1]["Year"][0]).forEach((year) => {
+					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+							Object.entries(date[1][0]).forEach((session) => {
+								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+									startDate: new Date(year[0], month[0], date[0], session[1][0].startDate),
+									endDate: new Date(year[0], month[0], date[0], session[1][0].endDate),
+									title: session[0],
+									tooltip: session[0],
+									type: sap.ui.unified.CalendarDayType.Type08
+								}));
+							})
+						})
+					})
+				})
 			})
 		},
 
@@ -140,7 +132,6 @@ sap.ui.define([
 				pattern: "YYYY/MM/dd"
 			});
 			var dateFormatted = dateFormat.format(date);
-			console.log(dateFormatted)
 			var result = this.specialDate.includes(dateFormatted);
 			if (result == true) {
 				var msg = 'this day is NonWorking.';

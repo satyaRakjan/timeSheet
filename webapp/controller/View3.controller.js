@@ -28,27 +28,23 @@ sap.ui.define([
 			}
 			var selectDate = new Date(this.date);
 			var checkDate = selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate();
-			var TSkeys = Object.entries(this.TS[0]);
-			TSkeys.forEach((year) => {
-				Object.entries(year[1]).forEach((months) => {
-					Object.entries(months[1]).forEach((month) => {
-						Object.entries(month[1]).forEach((days) => {
-							Object.entries(days[1]).forEach((day) => {
-								Object.entries(day[1]).forEach((sessions) => {
-									Object.entries(sessions[1]).forEach((session) => {
-										var fullDate = year[0] + month[0] + day[0];
-										if (checkDate == fullDate && session[0] == getSession) {
-											Object.entries(session[1]).forEach((obj) => {
-												status = obj[1].status;
-											})
-										}
-									})
-								});
-							});
-						});
-					});
-				});
+			var TSkeys = Object.entries(this.TS);
+			TSkeys.forEach((ts) => {
+				Object.entries(ts[1]["Year"][0]).forEach((year) => {
+					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+							Object.entries(date[1][0]).forEach((session) => {
+								var fullDate = year[0] + month[0] + date[0];
+								if (checkDate == fullDate && session[0] == getSession) {
+									status = session[1][0].status;
+								}
+
+							})
+						})
+					})
+				})
 			})
+
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -66,9 +62,34 @@ sap.ui.define([
 			this.heandleTimeSheet();
 
 		},
-		submitTS: function (oEvent) {
+		ClearTS: function () {
 			console.log(this.TS)
-			// var date = new Date(this.date);
+		},
+		submitTS: function (oEvent) {
+			var date = new Date(this.date);
+			var getYear = date.getFullYear();
+			var getMonth = date.getMonth();
+			var getDate = date.getDate();
+			var oModel = this.getView().getModel("timeSheet");
+			var T = this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS/0/");
+			
+			
+			var oModel = this.getView().getModel("timeSheet");
+			debugger
+			// var TSdata = {};
+			var TSdata = {
+				Year:"2021"
+			};
+			var oModelData = oModel.getProperty("/TS/0/");
+			oModelData.push(TSdata);
+			oModel.setProperty("/TS/0/", oModelData);
+			// var addTS = oModel.getProperty("/TS/0/");
+			// addTS.push(TSdata);
+			// oModel.setProperty("/TS/0/", addTS);
+			
+
+			// oModel.setProperty("/TS/0/" + year + "/0/" + month + "/0/",addTS);
+
 			// var startDate = "";
 			// var endDate = "";
 			// var title = "";
