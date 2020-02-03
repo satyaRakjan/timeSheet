@@ -1,1 +1,13 @@
 /* Enter your custom styles here */
+.sapUiCalItem.sapUiCalItemWeekEnd {
+  background-color: #9a9393;
+}
+.sapMSPCMonthDay.nonWorkingTimeframe {
+  background-color: #9a9393;
+}
+.sapMSPCMonthWeekNumber{
+  display: none;
+}
+.sapMSPCMonthDayNumber{
+  color: red;
+}

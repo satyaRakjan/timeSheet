@@ -1,8 +1,9 @@
 sap.ui.define([
 	'sap/ui/core/mvc/Controller',
 	'sap/ui/core/routing/History',
-	'sap/ui/model/json/JSONModel'
-], function (Controller, History, JSONModel) {
+	'sap/ui/model/json/JSONModel',
+	'sap/m/MessageToast'
+], function (Controller, History, JSONModel,MessageToast) {
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View3", {
@@ -63,7 +64,8 @@ sap.ui.define([
 
 		},
 		ClearTS: function () {
-			console.log(this.TS)
+			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			console.log(TS)
 		},
 		submitTS: function (oEvent) {
 			var date = new Date(this.date);
@@ -71,71 +73,38 @@ sap.ui.define([
 			var getMonth = date.getMonth();
 			var getDate = date.getDate();
 			var oModel = this.getView().getModel("timeSheet");
-			var T = this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS/0/");
-			
-			
-			var oModel = this.getView().getModel("timeSheet");
-			debugger
-			// var TSdata = {};
+			var oSelect = this.byId("sessions").getSelectedKey();
+			var getSession = "";
+			var startDate = "";
+			var endDate = "";
+			var status = this.byId("status").getSelectedKey();
+			console.log(status)
+			if (oSelect == "Morning") {
+				getSession = "AM";
+				startDate = "9";
+				endDate = "12";
+			} else if (oSelect == "Afternoon") {
+				getSession = "PM";
+				startDate = "13";
+				endDate = "18";
+			}
 			var TSdata = {
-				Year:"2021"
+				startDate: startDate,
+				endDate: endDate,
+				status: status
 			};
-			var oModelData = oModel.getProperty("/TS/0/");
-			oModelData.push(TSdata);
-			oModel.setProperty("/TS/0/", oModelData);
-			// var addTS = oModel.getProperty("/TS/0/");
-			// addTS.push(TSdata);
-			// oModel.setProperty("/TS/0/", addTS);
-			
-
-			// oModel.setProperty("/TS/0/" + year + "/0/" + month + "/0/",addTS);
-
-			// var startDate = "";
-			// var endDate = "";
-			// var title = "";
-			// if (this.session == "Morning") {
-			// 	startDate = new Date(date.setHours(9));
-			// 	endDate = new Date(date.setHours(12));
-			// 	title = "AM";
-
-			// } else {
-			// 	startDate = new Date(date.setHours(13));
-			// 	endDate = new Date(date.setHours(18));
-			// 	title = "PM";
-
-			// }
-			// var year = date.getFullYear();
-			// var month = "";
-			// var day = date.getDate();
-			// if (date.getMonth() > 9) {
-			// 	month = date.getMonth();
-			// } else {
-			// 	month = "0" + date.getMonth();
-			// }
-			// this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS/0/" + year + "/0/" + month + "/0/"+day);
-			// // var TSkeys = Object.entries(this.TS);
-			// console.log(this.TS);
-			// var oModel = this.getView().getModel("timeSheet");
-
-			// var TSdata = {};
-
-			// TSdata = {
-			// 	"startDate": startDate,
-			// 	"endDate": endDate
-			// };
-			// var addTS = oModel.getProperty("/TS");
-			// addTS.push(TSdata);
-			// oModel.setProperty("/TS/0/" + year + "/0/" + month + "/0/",addTS);
-			// var oHistory = History.getInstance();
-			// var sPreviousHash = oHistory.getPreviousHash();
-
-			// if (sPreviousHash !== undefined) {
-			// 	window.history.go(-1);
-			// } else {
-			// 	var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			// 	oRouter.navTo("RouteView2", false);
-			// }
-
+			var oEmployees = oModel.getProperty("/TS/0/Year/0/" + getYear + "/0/Month/0/" + getMonth + "/0/Date/0/" + getDate + "/0/" +
+				getSession + "/0/");
+			if (oEmployees) {
+				console.log(oEmployees)
+				oModel.setProperty("/TS/0/Year/0/" + getYear + "/0/Month/0/" + getMonth + "/0/Date/0/" + getDate + "/0/" + getSession + "/0",
+					TSdata);
+				oModel.updateBindings();
+				var msg = 'success.';
+				MessageToast.show(msg);
+			} else {
+				console.log("null")
+			}
 		},
 
 		onNavBack: function () {

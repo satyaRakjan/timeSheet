@@ -4,9 +4,6 @@
 		<content>
 			<unified:CalendarDateInterval id="calendar" select="handleCalendarSelect" showWeekNumbers="false" days="7" intervalSelection="false"
 				visible="true" width="100%" singleSelection="true">
-				<!--<specialDates>-->
-				<!--	<unified:DateTypeRange  startDate="{startDate}" type="{type}"></unified:DateTypeRange>-->
-				<!--</specialDates>-->
 			</unified:CalendarDateInterval>
 			<List binding="" headerText="" id="sessionList" mode="MultiSelect" backgroundDesign="Transparent" selectionChange="onSelectionChange">
 				<DisplayListItem label="Session ( {view>/selectDate} )" value=""></DisplayListItem>

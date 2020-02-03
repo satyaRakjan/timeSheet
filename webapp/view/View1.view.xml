@@ -5,11 +5,14 @@
 			<content>
 				<!--<PullToRefresh id="pullToRefresh" refresh="handleRefresh"/>-->
 				<SinglePlanningCalendar id="SPC1" viewChange="handleViewChange" appointmentSelect="handleAppointmentSelect"
-					startDateChange="handleStartDateChange" cellPress="handleCell" appointmentCreate="handleAppointmentCreateDnD"
-					stickyMode="All">
+					startDateChange="handleStartDateChange" cellPress="handleCell" appointmentCreate="handleAppointmentCreateDnD" stickyMode="All"
+					appointments="{path: '/appointments'}">
 					<views>
 						<SinglePlanningCalendarMonthView key="MonthView" title="Month"/>
 					</views>
+					<!--<specialDates >-->
+					<!--	<unified:DateTypeRange type="{type}" startDate="{startDate}"/>-->
+					<!--</specialDates>-->
 					<appointments>
 						<unified:CalendarAppointment tooltip="{title}" title="{title}" type="{type}" text="{text}" icon="{icon}" startDate="{startDate}"
 							endDate="{endDate}" tentative="{tentative}"></unified:CalendarAppointment>

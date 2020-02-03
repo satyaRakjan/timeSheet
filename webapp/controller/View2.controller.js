@@ -103,7 +103,7 @@ sap.ui.define([
 		},
 		onNavBack: function () {
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			oRouter.navTo("RouteView1", false);
+			oRouter.navTo("RouteView1", true);
 		},
 		AMPress: function (oEvent) {
 			var cal = this.byId("calendar");

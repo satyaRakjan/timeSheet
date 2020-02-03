@@ -19,7 +19,7 @@
 									<Label text="Transaction Date"/>
 									<Input value="{view>/date}" enabled="false"/>
 									<Label text="Session"/>
-									<Select id="country" selectedKey="{view>/session}" change="heandleSession">
+									<Select id="sessions" selectedKey="{view>/session}" change="heandleSession">
 										<items>
 											<core:Item text="Morning" key="Morning"/>
 											<core:Item text="Afternoon" key="Afternoon"/>

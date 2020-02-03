@@ -13,7 +13,8 @@
 								}],
 								"PM": [{
 									"startDate": "13",
-									"endDate": "18"
+									"endDate": "18",
+									"status": "Confirmed"
 								}]
 							}],
 							"16": [{
@@ -35,11 +36,13 @@
 							"24": [{
 								"AM": [{
 									"startDate": "9",
-									"endDate": "12"
+									"endDate": "12",
+									"status": "Confirmed"
 								}],
 								"PM": [{
 									"startDate": "13",
-									"endDate": "18"
+									"endDate": "18",
+									"status": "Confirmed"
 								}]
 							}]
 						}]

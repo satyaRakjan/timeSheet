@@ -7,8 +7,6 @@ sap.ui.define([
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View1", {
 		onInit: function () {
-			this.weeknum = document.getElementsByClassName("sapMSPCMonthWeekNumber");
-			this.nonWorking = document.getElementsByClassName('sapMSPCMonthDay nonWorkingTimeframe');
 			this.holiday = this.getOwnerComponent().getModel("Holiday").getProperty("/year");
 			// this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
@@ -19,9 +17,9 @@ sap.ui.define([
 		},
 
 		onAfterRendering: function () {
-			this.weekview();
-			this.timeSheetView();
+
 			var keys = Object.entries(this.holiday[0]);
+			// var innerText = document.querySelectorAll("#holidayText");
 			keys.forEach((v) => {
 				v[1].forEach((j) => {
 					var divDate = v[0] + "" + j.month + "" + j.startDate;
@@ -31,21 +29,29 @@ sap.ui.define([
 					if (el != null) {
 						el.style.backgroundColor = '#9a9393';
 						el.childNodes[2].style.color = 'black';
+						if(el.childNodes[4]){
+							el.childNodes[4].remove()
+						}
 						el.innerHTML += '<span id="holidayText" style="display:initial;text-overflow: ellipsis;overflow: hidden; margin:4px;">' +
 							j.title + '</span>';
+
 					}
 				})
 			})
+			this.noTimeSheet();
+			this.timeSheetView();
 
 		},
 
 		_onObjectMatched: function (oEvent) {
-			this.weekview();
-			this.handleTimeSheet();
+			setTimeout(function () {
+				this.onAfterRendering();
+			}.bind(this), 0);
 		},
 
 		timeSheetView: function () {
-			var TSkeys = Object.entries(this.TS);
+			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var TSkeys = Object.entries(TS);
 			TSkeys.forEach((ts) => {
 				Object.entries(ts[1]["Year"][0]).forEach((year) => {
 					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
@@ -58,13 +64,22 @@ sap.ui.define([
 						}
 						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
 							Object.entries(date[1][0]).forEach((session) => {
+
 								var fullDate = year[0] + getMonth + date[0];
 								var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
 								if (el) {
 									var conditions = ["AM", "PM"];
 									var hasAll = conditions.every(prop => date[1][0].hasOwnProperty(prop));
+
+									// var hasConfirm = conditions.every(prop => date[1][0].hasOwnProperty(prop));
 									if (hasAll == true) {
-										el.childNodes[2].style.color = 'black';
+										if (date[1][0].AM[0].status == "Confirmed" && date[1][0].PM[0].status == "Confirmed") {
+											el.childNodes[2].style.color = 'black';
+										}else{
+											el.childNodes[2].style.color = 'red';
+										}
+									}else{
+										el.childNodes[2].style.color = 'red';
 									}
 								}
 							})
@@ -73,23 +88,11 @@ sap.ui.define([
 				})
 			})
 		},
-
-		weekview: function () {
-			for (var i in this.weeknum) {
-				this.weeknum.item(i).remove();
-			}
-			for (var j in this.nonWorking) {
-				this.nonWorking.item(j).style.backgroundColor = "#9a9393";
-			}
-			this.noTimeSheet();
-		},
-
 		handleStartDateChange: function (oEvent) {
 			setTimeout(function () {
 				this.onAfterRendering();
 			}.bind(this), 0);
 		},
-
 		noTimeSheet: function () {
 			var today = new Date();
 			var dayNumber = document.querySelectorAll("div[sap-ui-date]");
@@ -97,8 +100,8 @@ sap.ui.define([
 				var el = dayNumber.item(k)
 				var elAt = el.getAttribute("sap-ui-date");
 				var elDate = new Date(parseInt(elAt));
-				if (today < elDate) {} else {
-					el.childNodes[2].style.color = 'red';
+				if (today > elDate) {} else {
+					el.childNodes[2].style.color = 'black';
 				}
 			}
 		},
@@ -107,6 +110,7 @@ sap.ui.define([
 			var cal = this.byId("SPC1");
 			cal.removeAllAppointments
 			var TSkeys = Object.entries(this.TS);
+			var oModel = this.getView().getModel("timeSheet");
 			TSkeys.forEach((ts) => {
 				Object.entries(ts[1]["Year"][0]).forEach((year) => {
 					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
