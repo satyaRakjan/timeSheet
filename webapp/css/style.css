@@ -1,13 +1,23 @@
 /* Enter your custom styles here */
+
 .sapUiCalItem.sapUiCalItemWeekEnd {
-  background-color: #9a9393;
+    background-color: #9a9393;
 }
+
 .sapMSPCMonthDay.nonWorkingTimeframe {
-  background-color: #9a9393;
+    background-color: #9a9393;
 }
-.sapMSPCMonthWeekNumber{
-  display: none;
+
+.sapMSPCMonthWeekNumber {
+    display: none;
 }
-.sapMSPCMonthDayNumber{
-  color: red;
+
+.sapMSPCMonthDayNumber {
+    color: red;
+}
+.sapUiCalItem.sapUiCalItemType08 {
+     background-color: #00D534    ;
+}
+.sapUiUnifiedLegendItem.sapUiUnifiedLegendNonWorkingDay{
+    display: none;
 }

@@ -14,11 +14,27 @@ sap.ui.define([
 			this.PMIcon = this.byId("PMIcon");
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView2").attachPatternMatched(this._onObjectMatched, this);
+			var oLeg1 = this.getView().byId("legend1");
+			
+			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
+				color: "#9a9393",
+				text: "Weekend & Holiday"
+			}));
+			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
+				color: "#00D534",
+				text: "Done"
+			}));
+			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
+				color: "red",
+				text: "Leave"
+			}));
 
 		},
 		onAfterRendering: function () {
 			var keys = Object.entries(this.holiday[0]);
 			var oCalendar = this.byId("calendar");
+			var TSmodel = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+
 			this.specialDate = [];
 			keys.forEach((v) => {
 				v[1].forEach((j) => {
@@ -30,6 +46,29 @@ sap.ui.define([
 						type: sap.ui.unified.CalendarDayType.NonWorking,
 						tooltip: j.title
 					}));
+				})
+			})
+			var TS = Object.entries(TSmodel);
+			TS.forEach((ts) => {
+				Object.entries(ts[1]["Year"][0]).forEach((year) => {
+					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+							Object.entries(date[1][0]).forEach((session) => {
+								var conditions = ["AM", "PM"];
+								var hasAll = conditions.every(prop => date[1][0].hasOwnProperty(prop));
+								var fullDate = new Date(year[0], month[0], date[0]);
+								if (hasAll == true) {
+									if (date[1][0].AM[0].status == "Confirmed" && date[1][0].PM[0].status == "Confirmed") {
+										oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+											startDate: new Date(fullDate),
+											endDate: new Date(fullDate),
+											type: sap.ui.unified.CalendarDayType.Type08
+										}));
+									}
+								}
+							})
+						})
+					})
 				})
 			})
 		},

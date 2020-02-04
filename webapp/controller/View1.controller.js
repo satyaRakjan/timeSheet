@@ -29,7 +29,7 @@ sap.ui.define([
 					if (el != null) {
 						el.style.backgroundColor = '#9a9393';
 						el.childNodes[2].style.color = 'black';
-						if(el.childNodes[4]){
+						if (el.childNodes[4]) {
 							el.childNodes[4].remove()
 						}
 						el.innerHTML += '<span id="holidayText" style="display:initial;text-overflow: ellipsis;overflow: hidden; margin:4px;">' +
@@ -75,10 +75,10 @@ sap.ui.define([
 									if (hasAll == true) {
 										if (date[1][0].AM[0].status == "Confirmed" && date[1][0].PM[0].status == "Confirmed") {
 											el.childNodes[2].style.color = 'black';
-										}else{
+										} else {
 											el.childNodes[2].style.color = 'red';
 										}
-									}else{
+									} else {
 										el.childNodes[2].style.color = 'red';
 									}
 								}
@@ -131,6 +131,7 @@ sap.ui.define([
 		},
 
 		handleCell: function (oEvent) {
+			var cal = this.byId("SPC1");
 			var date = new Date(oEvent.getParameters().startDate);
 			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: "YYYY/MM/dd"
