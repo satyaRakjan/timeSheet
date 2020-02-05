@@ -9,7 +9,6 @@ sap.ui.define([
 		onInit: function () {
 			this.holiday = this.getOwnerComponent().getModel("Holiday").getProperty("/year");
 			// this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			this.TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			this.specialDate = [];
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView1").attachPatternMatched(this._onObjectMatched, this);
@@ -17,7 +16,6 @@ sap.ui.define([
 		},
 
 		onAfterRendering: function () {
-
 			var keys = Object.entries(this.holiday[0]);
 			// var innerText = document.querySelectorAll("#holidayText");
 			keys.forEach((v) => {
@@ -52,41 +50,76 @@ sap.ui.define([
 		timeSheetView: function () {
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSkeys = Object.entries(TS);
-			TSkeys.forEach((ts) => {
-				Object.entries(ts[1]["Year"][0]).forEach((year) => {
-					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
-						var checkMonth = parseInt(month[0]) + 1;
-						var getMonth = "";
-						if (checkMonth > 9) {
-							getMonth = checkMonth
+			var test = this.getOwnerComponent().getModel("test").getProperty("/TS");
+			var testEntry = Object.entries(test);
+			testEntry.forEach((count) => {
+				var checkMonth =(count[1].Month) + 1;
+				var getMonth = "";
+				var getDate = "";
+				if (checkMonth > 9) {
+					getMonth = checkMonth
+				} else {
+					getMonth = "0" + checkMonth;
+				}
+				if(count[1].Date < 10){
+					getDate ="0"+count[1].Date ;
+				}else{
+					getDate = count[1].Date
+				}
+				Object.entries(count[1].Session[0]).forEach((session) => {
+					var fullDate = count[1].Year +""+ getMonth +""+ getDate;
+					var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
+					if (el) {
+						var conditions = ["AM", "PM"];
+						var hasAll = conditions.every(prop => count[1].Session[0].hasOwnProperty(prop));
+						if (hasAll == true) {
+							if (count[1].Session[0].AM[0].status == "Confirmed" && count[1].Session[0].PM[0].status == "Confirmed") {
+								el.childNodes[2].style.color = 'black';
+							} else {
+								el.childNodes[2].style.color = 'red';
+							}
 						} else {
-							getMonth = "0" + checkMonth;
+							el.childNodes[2].style.color = 'red';
 						}
-						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
-							Object.entries(date[1][0]).forEach((session) => {
-
-								var fullDate = year[0] + getMonth + date[0];
-								var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
-								if (el) {
-									var conditions = ["AM", "PM"];
-									var hasAll = conditions.every(prop => date[1][0].hasOwnProperty(prop));
-
-									// var hasConfirm = conditions.every(prop => date[1][0].hasOwnProperty(prop));
-									if (hasAll == true) {
-										if (date[1][0].AM[0].status == "Confirmed" && date[1][0].PM[0].status == "Confirmed") {
-											el.childNodes[2].style.color = 'black';
-										} else {
-											el.childNodes[2].style.color = 'red';
-										}
-									} else {
-										el.childNodes[2].style.color = 'red';
-									}
-								}
-							})
-						})
-					})
+					}
 				})
 			})
+
+			// TSkeys.forEach((ts) => {
+			// 	Object.entries(ts[1]["Year"][0]).forEach((year) => {
+			// 		Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+			// 			var checkMonth = parseInt(month[0]) + 1;
+			// 			var getMonth = "";
+			// 			if (checkMonth > 9) {
+			// 				getMonth = checkMonth
+			// 			} else {
+			// 				getMonth = "0" + checkMonth;
+			// 			}
+			// 			Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+			// 				Object.entries(date[1][0]).forEach((session) => {
+
+			// 					var fullDate = year[0] + getMonth + date[0];
+			// 					var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
+			// 					if (el) {
+			// 						var conditions = ["AM", "PM"];
+			// 						var hasAll = conditions.every(prop => date[1][0].hasOwnProperty(prop));
+			// 						console.log(date[1][0])
+			// 						// var hasConfirm = conditions.every(prop => date[1][0].hasOwnProperty(prop));
+			// 						if (hasAll == true) {
+			// 							if (date[1][0].AM[0].status == "Confirmed" && date[1][0].PM[0].status == "Confirmed") {
+			// 								el.childNodes[2].style.color = 'black';
+			// 							} else {
+			// 								el.childNodes[2].style.color = 'red';
+			// 							}
+			// 						} else {
+			// 							el.childNodes[2].style.color = 'red';
+			// 						}
+			// 					}
+			// 				})
+			// 			})
+			// 		})
+			// 	})
+			// })
 		},
 		handleStartDateChange: function (oEvent) {
 			setTimeout(function () {
@@ -109,25 +142,41 @@ sap.ui.define([
 		handleTimeSheet: function () {
 			var cal = this.byId("SPC1");
 			cal.removeAllAppointments
-			var TSkeys = Object.entries(this.TS);
+			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var TSkeys = Object.entries(TS);
 			var oModel = this.getView().getModel("timeSheet");
-			TSkeys.forEach((ts) => {
-				Object.entries(ts[1]["Year"][0]).forEach((year) => {
-					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
-						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
-							Object.entries(date[1][0]).forEach((session) => {
-								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-									startDate: new Date(year[0], month[0], date[0], session[1][0].startDate),
-									endDate: new Date(year[0], month[0], date[0], session[1][0].endDate),
-									title: session[0],
-									tooltip: session[0],
-									type: sap.ui.unified.CalendarDayType.Type08
-								}));
-							})
-						})
+
+			var test = this.getOwnerComponent().getModel("test").getProperty("/TS");
+			var testEntry = Object.entries(test);
+			testEntry.forEach((count) => {
+					Object.entries(count[1].Session[0]).forEach((session) => {
+						cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+							startDate: new Date(count[1].Year, count[1].Month, count[1].Date, session[1][0].startDate),
+							endDate: new Date(count[1].Year, count[1].Month, count[1].Date, session[1][0].endDate),
+							title: session[0],
+							tooltip: session[0],
+							type: sap.ui.unified.CalendarDayType.Type08
+						}));
+
 					})
 				})
-			})
+				// TSkeys.forEach((ts) => {
+				// 	Object.entries(ts[1]["Year"][0]).forEach((year) => {
+				// 		Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+				// 			Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+				// 				Object.entries(date[1][0]).forEach((session) => {
+				// 					cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+				// 						startDate: new Date(year[0], month[0], date[0], session[1][0].startDate),
+				// 						endDate: new Date(year[0], month[0], date[0], session[1][0].endDate),
+				// 						title: session[0],
+				// 						tooltip: session[0],
+				// 						type: sap.ui.unified.CalendarDayType.Type08
+				// 					}));
+				// 				})
+				// 			})
+				// 		})
+				// 	})
+				// })
 		},
 
 		handleCell: function (oEvent) {

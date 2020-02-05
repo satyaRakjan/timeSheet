@@ -3,7 +3,7 @@ sap.ui.define([
 	'sap/ui/core/routing/History',
 	'sap/ui/model/json/JSONModel',
 	'sap/m/MessageToast'
-], function (Controller, History, JSONModel,MessageToast) {
+], function (Controller, History, JSONModel, MessageToast) {
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View3", {
@@ -30,22 +30,34 @@ sap.ui.define([
 			var selectDate = new Date(this.date);
 			var checkDate = selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate();
 			var TSkeys = Object.entries(this.TS);
-			TSkeys.forEach((ts) => {
-				Object.entries(ts[1]["Year"][0]).forEach((year) => {
-					Object.entries(year[1][0]["Month"][0]).forEach((month) => {
-						Object.entries(month[1][0]["Date"][0]).forEach((date) => {
-							Object.entries(date[1][0]).forEach((session) => {
-								var fullDate = year[0] + month[0] + date[0];
-								if (checkDate == fullDate && session[0] == getSession) {
-									status = session[1][0].status;
-								}
-
-							})
-						})
-					})
+			var test = this.getOwnerComponent().getModel("test").getProperty("/TS");
+			var testEntry = Object.entries(test);
+			testEntry.forEach((count) => {
+				Object.entries(count[1].Session[0]).forEach((session) => {
+					var fullDate = count[1].Year+""+ count[1].Month+""+ count[1].Date;
+					if (checkDate == fullDate && session[0] == getSession) {
+						status = session[1][0].status;
+						console.log(session[1][0].status)
+					}
 				})
 			})
+			// TSkeys.forEach((ts) => {
+			// 	Object.entries(ts[1]["Year"][0]).forEach((year) => {
+			// 		Object.entries(year[1][0]["Month"][0]).forEach((month) => {
+			// 			Object.entries(month[1][0]["Date"][0]).forEach((date) => {
+			// 				Object.entries(date[1][0]).forEach((session) => {
+			// 					var fullDate = year[0] + month[0] + date[0];
+			// 					if (checkDate == fullDate && session[0] == getSession) {
+			// 						console.log(session[0])
+			// 						console.log(getSession)
+			// 						status = session[1][0].status;
+			// 					}
 
+			// 				})
+			// 			})
+			// 		})
+			// 	})
+			// })
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -95,16 +107,23 @@ sap.ui.define([
 			};
 			var oEmployees = oModel.getProperty("/TS/0/Year/0/" + getYear + "/0/Month/0/" + getMonth + "/0/Date/0/" + getDate + "/0/" +
 				getSession + "/0/");
-			if (oEmployees) {
-				console.log(oEmployees)
-				oModel.setProperty("/TS/0/Year/0/" + getYear + "/0/Month/0/" + getMonth + "/0/Date/0/" + getDate + "/0/" + getSession + "/0",
-					TSdata);
-				oModel.updateBindings();
-				var msg = 'success.';
-				MessageToast.show(msg);
-			} else {
-				console.log("null")
-			}
+			// var oEmployees = oModel.getProperty("/TS/0/Year/0/" + getYear + "/0/Month/0/" + getMonth + "/0/Date/0/" + getDate + "/0/" +
+			// 	getSession + "/0/");
+				console.log(msg);   
+			// if (oEmployees) {
+			// 	console.log(oEmployees)
+			// 	oModel.setProperty("/TS/0/Year/0/" + getYear + "/0/Month/0/" + getMonth + "/0/Date/0/" + getDate + "/0/" + getSession + "/0",
+			// 		TSdata);
+			// 	oModel.updateBindings();
+			// 	var msg = 'success.';
+			// 	MessageToast.show(msg);
+			// } else {
+			// 	var oModelData = oModel.getProperty("/TS/0/Year");
+			// 	oModelData.push(2022);
+			// 	console.log(oModelData)
+			// 	oModel.updateBindings();
+		
+			// }
 		},
 
 		onNavBack: function () {

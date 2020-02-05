@@ -1,81 +1,60 @@
 {
 	"TS": [{
-		"Year": [{
-			"2020": [{
-				"Month": [{
-					"0": [{
-						"Date": [{
-							"15": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12",
-									"status": "Confirmed"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}],
-							"16": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}]
-							}],
-							"17": [{
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}]
-						}]
-					}],
-					"1": [{
-						"Date": [{
-							"24": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}]
-						}]
-
-					}]
-
-				}]
-
+		"ID": 20191130,
+		"Year": 2019,
+		"Month": 11,
+		"Date": 30,
+		"Session": [{
+			"AM": [{
+				"startDate": "9",
+				"endDate": "12",
+				"status": "Confirmed"
+			}]
+		}]
+	}, {
+		"ID": 2020015,
+		"Year": 2020,
+		"Month": 0,
+		"Date": 15,
+		"Session": [{
+			"AM": [{
+				"startDate": "9",
+				"endDate": "12",
+				"status": "Confirmed"
 			}],
-			"2019": [{
-				"Month": [{
-					"0": [{
-						"Date": [{
-							"15": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}],
-							"16": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}]
-						}]
-					}]
-				}]
+			"PM": [{
+				"startDate": "13",
+				"endDate": "18",
+				"status": "Confirmed"
+			}]
+		}]
+	}, {
+		"ID": 2020016,
+		"Year": 2020,
+		"Month": 0,
+		"Date": 16,
+		"Session": [{
+			"AM": [{
+				"startDate": "9",
+				"endDate": "12",
+				"status": "Notconfirmed"
+			}]
+		}]
+	},  {
+		"ID": 202014,
+		"Year": 2020,
+		"Month": 1,
+		"Date": 4,
+		"Session": [{
+			"AM": [{
+				"startDate": "9",
+				"endDate": "12",
+				"status": "Confirmed"
+			}],
+			"PM": [{
+				"startDate": "13",
+				"endDate": "18",
+				"status": "Confirmed"
 			}]
 		}]
 	}]
