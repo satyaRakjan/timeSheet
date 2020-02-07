@@ -1,85 +1,79 @@
 {
 	"TS": [{
-		"Year": [{
-			"2020": [{
-				"Month": [{
-					"0": [{
-						"Date": [{
-							"15": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12",
-									"status": "Confirmed"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18",
-									"status": "Confirmed"
-								}]
-							}],
-							"16": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}]
-							}],
-							"17": [{
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}]
-						}]
-					}],
-					"1": [{
-						"Date": [{
-							"24": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12",
-									"status": "Confirmed"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18",
-									"status": "Confirmed"
-								}]
-							}]
-						}]
-
-					}]
-
-				}]
-
-			}],
-			"2019": [{
-				"Month": [{
-					"0": [{
-						"Date": [{
-							"15": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}],
-							"16": [{
-								"AM": [{
-									"startDate": "9",
-									"endDate": "12"
-								}],
-								"PM": [{
-									"startDate": "13",
-									"endDate": "18"
-								}]
-							}]
-						}]
-					}]
-				}]
-			}]
+		"ID": 2020015,
+		"Year": 2020,
+		"Month": 0,
+		"Date": 15,
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12",
+			"status": "Confirmed"
+		}, {
+			"ID": "PM",
+			"startDate": "13",
+			"endDate": "18",
+			"status": "Confirmed"
+		}]
+	}, {
+		"ID": 2020016,
+		"Year": 2020,
+		"Month": 0,
+		"Date": 16,
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12",
+			"status": "Notconfirmed"
+		}]
+	}, {
+		"ID": 202014,
+		"Year": 2020,
+		"Month": 1,
+		"Date": 4,
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12",
+			"status": "Confirmed"
+		}, {
+			"ID": "PM",
+			"startDate": "13",
+			"endDate": "18",
+			"status": "Notconfirmed"
+		}]
+	},{
+		"ID": 2020114,
+		"Year": 2020,
+		"Month": 1,
+		"Date": 14,
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12",
+			"status": "Notconfirmed"
+		}, {
+			"ID": "PM",
+			"startDate": "13",
+			"endDate": "18",
+			"status": "Confirmed"
+		}]
+	},
+	{
+		"ID": 2020115,
+		"Year": 2020,
+		"Month": 1,
+		"Date": 15,
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12",
+			"status": "Notconfirmed"
+		}, {
+			"ID": "PM",
+			"startDate": "13",
+			"endDate": "18",
+			"status": "Notconfirmed"
 		}]
 	}]
 }

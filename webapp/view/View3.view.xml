@@ -33,9 +33,8 @@
 									<Label text="*Transaction Sub Type"/>
 									<Select id="status" selectedKey="{view>/status}">
 										<items>
-											<core:Item text="" key=""/>
-											<core:Item text="CO Confirmed" key="Confirmed"/>
 											<core:Item text="Not Confirmed" key="Notconfirmed"/>
+											<core:Item text="CO Confirmed" key="Confirmed"/>
 										</items>
 									</Select>
 									<Label text=""/>
