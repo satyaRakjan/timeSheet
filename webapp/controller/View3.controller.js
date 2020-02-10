@@ -92,45 +92,43 @@ sap.ui.define([
 			var msg = 'success.';
 			if (index >= 0) {
 				var getOModel = oModel.getProperty("/TS/" + index + "/Session");
+
 				try {
 					var sessionKey = getOModel.findIndex(s => s.ID == getSession)
 					if (sessionKey >= 0) {
+						console.log(sessionKey)
 						oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
 						oModel.updateBindings();
 						MessageToast.show(msg);
 					} else {
-						console.log(getOModel)
+						// getOModel.push(TSdata);
+						// oModel.setProperty("/TS/" + index + "/Session", getOModel);
+						// oModel.updateBindings();
+						// MessageToast.show(msg);
 					}
 
 				} catch (err) {
-					// addNewSession.push(TSdata);
-					// console.log(addNewSession)
-					// oModel.setProperty("/TS/" + index + "/Session",addNewSessions);
+					// getOModel.push(TSdata);
+					// oModel.setProperty("/TS/" + index + "/Session", getOModel);
 					// oModel.updateBindings();
-					console.log("add")
-					MessageToast.show(msg);
-					// console.log(addNewSession)
+					// MessageToast.show(msg);
 
 				}
-				// if (getOModel != "undefined") {} else {
-				// 	var addNewSessions = oModel.getProperty("/TS/" + index + "/Session");
-				// 	addNewSessions.push(TSdata);
-				// 	oModel.setProperty("/TS/" + index + "/Session", addNewSessions);
-				// 	oModel.updateBindings()
-				// 	MessageToast.show(msg);
-
-				// 	// console.log(oModel.getProperty("/TS/" + index + "/Session/0/"))
-				// }
-
-				// oModel.setProperty("/TS/"+index+"/");
-
 			} else {
+				var addObj = [];
+				if (getSession == "AM") {
+					addObj.push(TSdata, {ID:"PM"})
+
+				} else if (getSession == "PM") {
+					addObj.push({ID:"AM"}, TSdata)
+
+				}
 				var newObject = {
 					"ID": fullDate,
 					"Year": getYear,
 					"Month": getMonth,
 					"Date": getDate,
-					"Session": [TSdata]
+					"Session": addObj
 				}
 				oModelData.push(newObject);
 				oModel.setProperty("/TS", oModelData);

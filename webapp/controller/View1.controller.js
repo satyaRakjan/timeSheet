@@ -69,8 +69,13 @@ sap.ui.define([
 					getDate = count[1].Date
 				}
 				Object.entries(count[1].Session).forEach((sessions) => {
+					console.log(count[1].Session)
 					if (count[1].Session.length = 2) {
-						status.push(sessions[1].status)
+						try {
+							status.push(sessions[1].status)
+						} catch (err) {
+
+						}
 					}
 				})
 				var check = ["Confirmed", "Confirmed"]
@@ -112,13 +117,18 @@ sap.ui.define([
 			var TSEntry = Object.entries(TS);
 			TSEntry.forEach((count) => {
 				Object.entries(count[1].Session).forEach((sessions) => {
-					cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-						startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-						endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-						title: sessions[1].ID,
-						tooltip: sessions[1].ID,
-						type: sap.ui.unified.CalendarDayType.Type08
-					}));
+					try {
+						cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+							startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+							endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+							title: sessions[1].ID,
+							tooltip: sessions[1].ID,
+							type: sap.ui.unified.CalendarDayType.Type08
+						}));
+					} catch (err) {
+
+					}
+
 				})
 			})
 
