@@ -81,7 +81,7 @@ sap.ui.define([
 				endDate = "18";
 			}
 			var TSdata = {
-				ID:getSession,
+				ID: getSession,
 				startDate: startDate,
 				endDate: endDate,
 				status: status
@@ -89,61 +89,54 @@ sap.ui.define([
 			var oModelData = oModel.getProperty("/TS");
 			// var index = oModelData.findIndex(s => s.ID == fullDate)
 			var index = oModelData.findIndex(s => s.ID == fullDate)
+			var msg = 'success.';
 			if (index >= 0) {
-				var msg = 'success.';
 				var getOModel = oModel.getProperty("/TS/" + index + "/Session");
 				try {
 					var sessionKey = getOModel.findIndex(s => s.ID == getSession)
-					oModel.setProperty("/TS/" + index + "/Session/"+sessionKey,TSdata);
-					oModel.updateBindings();
-					MessageToast.show(msg);
-				} catch (err) {
-					console.log("error")
-				}
-				if (getOModel != "undefined") {
-				} else {
-					var newSession = "";
-					if (getSession == "AM") {
-						newSession = {
-							"AM": TSdata
-						}
-					} else if (getSession == "PM") {
-						newSession = {
-							"PM": TSdata
-						}
+					if (sessionKey >= 0) {
+						oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
+						oModel.updateBindings();
+						MessageToast.show(msg);
+					} else {
+						console.log(getOModel)
 					}
-					var addNewSessions = oModel.getProperty("/TS/" + index + "/Session");
-					// addNewSessions.push(newSession);
-					// oModel.setProperty("/TS/" + index + "/Session", addNewSessions);
-					console.log(getOModel)
-					MessageToast.show(msg);
-					// oModel.updateBindings()
 
-					// console.log(oModel.getProperty("/TS/" + index + "/Session/0/"))
+				} catch (err) {
+					// addNewSession.push(TSdata);
+					// console.log(addNewSession)
+					// oModel.setProperty("/TS/" + index + "/Session",addNewSessions);
+					// oModel.updateBindings();
+					console.log("add")
+					MessageToast.show(msg);
+					// console.log(addNewSession)
+
 				}
+				// if (getOModel != "undefined") {} else {
+				// 	var addNewSessions = oModel.getProperty("/TS/" + index + "/Session");
+				// 	addNewSessions.push(TSdata);
+				// 	oModel.setProperty("/TS/" + index + "/Session", addNewSessions);
+				// 	oModel.updateBindings()
+				// 	MessageToast.show(msg);
+
+				// 	// console.log(oModel.getProperty("/TS/" + index + "/Session/0/"))
+				// }
 
 				// oModel.setProperty("/TS/"+index+"/");
 
 			} else {
-				// oModelData.push();
-				// var newObject = {
-				// 	"ID": ,
-				// 	"Year":,
-				// 	"Month":,
-				// 	"Date":,
-				// 	"Session":
-
-				// }
-				// console.log(oModelData)
+				var newObject = {
+					"ID": fullDate,
+					"Year": getYear,
+					"Month": getMonth,
+					"Date": getDate,
+					"Session": [TSdata]
+				}
+				oModelData.push(newObject);
+				oModel.setProperty("/TS", oModelData);
+				oModel.updateBindings()
+				MessageToast.show(msg);
 			}
-
-			// } else {
-			// 	var oModelData = oModel.getProperty("/TS/0/Year");
-			// 	oModelData.push(2022);
-			// 	console.log(oModelData)
-			// 	oModel.updateBindings();
-
-			// }
 		},
 
 		onNavBack: function () {

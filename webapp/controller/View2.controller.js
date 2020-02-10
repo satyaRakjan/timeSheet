@@ -15,7 +15,6 @@ sap.ui.define([
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView2").attachPatternMatched(this._onObjectMatched, this);
 			var oLeg1 = this.getView().byId("legend1");
-
 			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
 				color: "#9a9393",
 				text: "Weekend & Holiday"
@@ -88,7 +87,7 @@ sap.ui.define([
 		},
 
 		timeSheetSelect: function (selectDate) {
-			console.log("change")
+			// console.log("change")
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -138,7 +137,7 @@ sap.ui.define([
 		},
 		onNavBack: function () {
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			oRouter.navTo("RouteView1", true);
+			oRouter.navTo("RouteView1");
 		},
 		AMPress: function (oEvent) {
 			var cal = this.byId("calendar");

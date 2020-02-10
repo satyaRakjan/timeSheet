@@ -12,8 +12,11 @@ sap.ui.define([
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView1").attachPatternMatched(this._onObjectMatched, this);
 			this.handleTimeSheet();
-		},
 
+		},
+		onBeforeRendering: function () {
+
+		},
 		onAfterRendering: function () {
 			var keys = Object.entries(this.holiday[0]);
 			keys.forEach((v) => {
@@ -30,7 +33,6 @@ sap.ui.define([
 						}
 						el.innerHTML += '<span id="holidayText" style="display:initial;text-overflow: ellipsis;overflow: hidden; margin:4px;">' +
 							j.title + '</span>';
-
 					}
 				})
 			})
@@ -40,6 +42,7 @@ sap.ui.define([
 		},
 
 		_onObjectMatched: function (oEvent) {
+			this.handleTimeSheet();
 			setTimeout(function () {
 				this.onAfterRendering();
 			}.bind(this), 0);
@@ -102,7 +105,8 @@ sap.ui.define([
 
 		handleTimeSheet: function () {
 			var cal = this.byId("SPC1");
-			cal.removeAllAppointments
+			cal.removeAllAppointments()
+
 			var oModel = this.getView().getModel("timeSheet");
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
@@ -117,6 +121,7 @@ sap.ui.define([
 					}));
 				})
 			})
+
 		},
 
 		handleCell: function (oEvent) {
