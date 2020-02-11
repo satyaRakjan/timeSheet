@@ -97,13 +97,21 @@ sap.ui.define([
 		noTimeSheet: function () {
 			var today = new Date();
 			var dayNumber = document.querySelectorAll("div[sap-ui-date]");
+			var weekend = document.getElementsByClassName("sapMSPCMonthDay nonWorkingTimeframe");
+
 			for (var k in dayNumber) {
 				var el = dayNumber.item(k)
 				var elAt = el.getAttribute("sap-ui-date");
 				var elDate = new Date(parseInt(elAt));
-				if (today > elDate) {} else {
+				if (today > elDate) {
+
+				} else {
 					el.childNodes[2].style.color = 'black';
 				}
+			}
+			for (var i in weekend) {
+				var element = weekend.item(i);
+				element.childNodes[2].style.color = 'black';
 			}
 		},
 

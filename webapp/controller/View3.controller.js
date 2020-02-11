@@ -108,7 +108,6 @@ sap.ui.define([
 
 				} catch (err) {
 					// console.log(getOModel)
-			
 					// getOModel.push(TSdata);
 					// oModel.setProperty("/TS/" + index + "/Session", getOModel);
 					// oModel.updateBindings();
