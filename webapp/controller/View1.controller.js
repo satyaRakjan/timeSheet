@@ -69,7 +69,6 @@ sap.ui.define([
 					getDate = count[1].Date
 				}
 				Object.entries(count[1].Session).forEach((sessions) => {
-					console.log(count[1].Session)
 					if (count[1].Session.length = 2) {
 						try {
 							status.push(sessions[1].status)

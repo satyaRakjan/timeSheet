@@ -7,10 +7,6 @@
 			<List binding="" headerText="" id="sessionList" mode="MultiSelect" backgroundDesign="Transparent" selectionChange="onSelectionChange">
 				<DisplayListItem label="Session ( {view>/selectDate} )" value=""></DisplayListItem>
 			</List>
-			<!--<List binding="" headerText="" mode="MultiSelect" backgroundDesign="Translucent" selectionChange="onSelectionSession">-->
-			<!--	<DisplayListItem id="AM" label="Morning" value="" type="Navigation" press="itemPress"></DisplayListItem>-->
-			<!--	<DisplayListItem id="PM" label="Afternoon" value="" type="Navigation" press="itemPress"></DisplayListItem>-->
-			<!--</List>-->
 			<List id="multiSelect" headerText="" mode="MultiSelect" selectionChange="onSelectionSession">
 				<CustomListItem id="AM" type="Navigation" press="AMPress">
 					<FlexBox alignItems="Start" justifyContent="SpaceBetween">
@@ -37,7 +33,7 @@
 				<Button id="copyBtn" type="Emphasized" text="Copy to" enabled="false" press="copyTo">
 					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
 				</Button>
-				<Button id="delBtn" type="Negative" icon="" text="Delete" enabled="false">
+				<Button id="delBtn" type="Negative" icon="" text="Delete" enabled="false" press="deleteSession">
 					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
 				</Button>
 				<Button type="Emphasized" text="Activity">

@@ -96,7 +96,6 @@ sap.ui.define([
 				try {
 					var sessionKey = getOModel.findIndex(s => s.ID == getSession)
 					if (sessionKey >= 0) {
-						console.log(sessionKey)
 						oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
 						oModel.updateBindings();
 						MessageToast.show(msg);
@@ -108,6 +107,8 @@ sap.ui.define([
 					}
 
 				} catch (err) {
+					// console.log(getOModel)
+			
 					// getOModel.push(TSdata);
 					// oModel.setProperty("/TS/" + index + "/Session", getOModel);
 					// oModel.updateBindings();
@@ -117,10 +118,14 @@ sap.ui.define([
 			} else {
 				var addObj = [];
 				if (getSession == "AM") {
-					addObj.push(TSdata, {ID:"PM"})
+					addObj.push(TSdata, {
+						ID: "PM"
+					})
 
 				} else if (getSession == "PM") {
-					addObj.push({ID:"AM"}, TSdata)
+					addObj.push({
+						ID: "AM"
+					}, TSdata)
 
 				}
 				var newObject = {
