@@ -228,19 +228,17 @@ sap.ui.define([
 					this._oPopover = oPopover;
 					this.getView().addDependent(this._oPopover);
 					this._oPopover.openBy(oButton);
-					this.calendarCopy();
 				}.bind(this));
 			} else {
 				this._oPopover.openBy(oButton);
-				this.calendarCopy();
 			}
+			this.calendarCopy();
+
 		},
 		onClose: function () {
 			this._oPopover.close();
 		},
 		onSubmitCopy: function () {
-			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
-			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
 			var cal = this.byId("calendar");
 			var date = cal.getSelectedDates()[0].getStartDate();
 			var oModel = this.getView().getModel("timeSheet");
@@ -251,21 +249,17 @@ sap.ui.define([
 			var fullDate = getYear + "" + getMonth + "" + getDate;
 			var index = oModelData.findIndex(s => s.ID == fullDate)
 			var calCopy = this.byId("calendarCopy");
-			console.log(calCopy)
-			if (getAM == true && getPM == true) {
-				console.log("msg")
-			} else if (getAM == true) {
-				console.log("msg")
-			} else if (getPM == true) {
-				console.log("msg")
-			}
 		},
-		calendarCopy: function (oEvent) {
+		calendarCopy: function () {
+			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
+			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected()
+
 			// var oCtx = oEvent.getSource().getBindingContext();
 			var oCalendarCopy = Fragment.byId("copyTo", "calendarCopy");
 			var keys = Object.entries(this.holiday[0]);
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
+			oCalendarCopy.removeAllSpecialDates();
 			// this.specialDate = [];
 			keys.forEach((v) => {
 				v[1].forEach((j) => {
@@ -279,25 +273,53 @@ sap.ui.define([
 					}));
 				})
 			})
-			
+
 			TSEntry.forEach((count) => {
-				var status = [];
-				Object.entries(count[1].Session).forEach((sessions) => {
-					if (count[1].Session.length = 2) {
-						status.push(sessions[1].status)
-					}
-				})
-				var check = ["Confirmed", "Confirmed"];
+				// var status = [];
 				var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
-				if (JSON.stringify(status) === JSON.stringify(check)) {
-					oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
-						startDate: new Date(fullDate),
-						endDate: new Date(fullDate),
-						type: sap.ui.unified.CalendarDayType.Type08
-					}));
-				}else{
-					
+				if (getAM == true && getPM == true) {
+					if (count[1].Session[0].status || count[1].Session[1].status) {
+						oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
+							startDate: new Date(fullDate),
+							endDate: new Date(fullDate),
+							type: sap.ui.unified.CalendarDayType.NonWorking
+						}));
+					}
+				} else if (getAM == true) {
+					if (count[1].Session[0].status) {
+						oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
+							startDate: new Date(fullDate),
+							endDate: new Date(fullDate),
+							type: sap.ui.unified.CalendarDayType.NonWorking
+						}));
+					} else {
+
+					}
+				} else if (getPM == true) {
+					if (count[1].Session[1].status) {
+						oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
+							startDate: new Date(fullDate),
+							endDate: new Date(fullDate),
+							type: sap.ui.unified.CalendarDayType.NonWorking
+						}));
+					} else {
+
+					}
 				}
+				Object.entries(count[1].Session).forEach((sessions) => {
+
+					})
+					// var check = ["Confirmed", "Confirmed"];
+					// var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
+					// if (JSON.stringify(status) === JSON.stringify(check)) {
+					// 	oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
+					// 		startDate: new Date(fullDate),
+					// 		endDate: new Date(fullDate),
+					// 		type: sap.ui.unified.CalendarDayType.Type08
+					// 	}));
+					// } else {
+
+				// }
 			})
 
 		},
