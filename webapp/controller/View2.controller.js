@@ -2,9 +2,10 @@ sap.ui.define([
 	'sap/ui/core/mvc/Controller',
 	'sap/ui/core/routing/History',
 	'sap/ui/model/json/JSONModel',
-	'sap/m/MessageToast'
+	'sap/m/MessageToast',
+	'sap/ui/core/Fragment'
 
-], function (Controller, History, JSONModel, MessageToast) {
+], function (Controller, History, JSONModel, MessageToast, Fragment) {
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View2", {
@@ -65,6 +66,11 @@ sap.ui.define([
 			this.addSpecialDate();
 
 		},
+		onExit: function () {
+			if (this._oPopover) {
+				this._oPopover.destroy();
+			}
+		},
 
 		addSpecialDate: function () {
 			var oCalendar = this.byId("calendar");
@@ -90,6 +96,7 @@ sap.ui.define([
 
 		},
 		timeSheetSelect: function (selectDate) {
+			console.log(selectDate)
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -120,6 +127,20 @@ sap.ui.define([
 							}
 						})
 
+					} else {
+						this.delBtn.setEnabled(false);
+						this.copyBtn.setEnabled(false);
+						var oCalendar = this.byId("calendar");
+						var index = oCalendar.getSpecialDates().findIndex(s => String(s.getStartDate()) == String(selectDate))
+						if(index >= 0){
+							oCalendar.removeSpecialDate(index);
+						}
+
+						// oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						// 	startDate: new Date(fullDate),
+						// 	endDate: new Date(fullDate),
+						// 	type: sap.ui.unified.CalendarDayType.Type01
+						// }));
 					}
 
 				})
@@ -191,6 +212,7 @@ sap.ui.define([
 				this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setSelected(false);
 				this.delBtn.setEnabled(false);
 				this.copyBtn.setEnabled(false);
+
 			}
 		},
 		onSelectionSession: function (oEvent) {
@@ -203,9 +225,9 @@ sap.ui.define([
 				this.copyBtn.setEnabled(false)
 				this.delBtn.setEnabled(false)
 			}
-
 		},
 		copyTo: function (oEvent) {
+			var oButton = oEvent.getSource();
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
 			if (getAM == true && getPM == true) {
@@ -216,6 +238,18 @@ sap.ui.define([
 				console.log("msg")
 			}
 
+			if (!this._oPopover) {
+				Fragment.load({
+					name: "sap.m.sample.ResponsivePopover.view.copyTo",
+					controller: this
+				}).then(function (oPopover) {
+					this._oPopover = oPopover;
+					this.getView().addDependent(this._oPopover);
+					this._oPopover.openBy(oButton);
+				}.bind(this));
+			} else {
+				this._oPopover.openBy(oButton);
+			}
 		},
 		deleteSession: function () {
 			var cal = this.byId("calendar");
@@ -227,7 +261,7 @@ sap.ui.define([
 			var getDate = date.getDate();
 			var fullDate = getYear + "" + getMonth + "" + getDate;
 			var index = oModelData.findIndex(s => s.ID == fullDate)
-			// var getOModel = oModel.getProperty("/TS/" + index + "/Session");
+				// var getOModel = oModel.getProperty("/TS/" + index + "/Session");
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
 			var msg = 'Deleted.';
@@ -237,17 +271,20 @@ sap.ui.define([
 				MessageToast.show(msg);
 			} else if (getAM == true) {
 				// getOModel.splice(0, 1);
-				oModel.setProperty("/TS/" + index + "/Session/0", {ID:"AM"});
+				oModel.setProperty("/TS/" + index + "/Session/0", {
+					ID: "AM"
+				});
 				MessageToast.show(msg);
 			} else if (getPM == true) {
 				// getOModel.splice(1, 1);
-				oModel.setProperty("/TS/" + index + "/Session/1", {ID:"PM"});
+				oModel.setProperty("/TS/" + index + "/Session/1", {
+					ID: "PM"
+				});
 				MessageToast.show(msg);
 			}
-			this.delBtn.setEnabled(false);
-			this.copyBtn.setEnabled(false);
-			// location.reload();
+			this.timeSheetSelect();
 
+			// location.reload();
 		}
 	});
 });

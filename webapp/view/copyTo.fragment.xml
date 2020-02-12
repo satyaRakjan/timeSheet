@@ -1,0 +1,16 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ResponsivePopover
+		class="sapUiPopupWithPadding"
+		placement="Bottom" >
+		<beginButton>
+			<Button text="Action-A" press="handleCloseButton" />
+		</beginButton>
+		<endButton>
+			<Button text="Action-B" press="handleCloseButton" />
+		</endButton>
+		<content>
+		</content>
+	</ResponsivePopover>
+</core:FragmentDefinition>

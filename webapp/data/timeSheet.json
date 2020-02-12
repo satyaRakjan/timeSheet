@@ -63,22 +63,5 @@
 			"endDate": "18",
 			"status": "Confirmed"
 		}]
-	},
-	{
-		"ID": 2020115,
-		"Year": 2020,
-		"Month": 1,
-		"Date": 15,
-		"Session": [{
-			"ID": "AM",
-			"startDate": "9",
-			"endDate": "12",
-			"status": "Notconfirmed"
-		}, {
-			"ID": "PM",
-			"startDate": "13",
-			"endDate": "18",
-			"status": "Notconfirmed"
-		}]
 	}]
 }
