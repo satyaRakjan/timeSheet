@@ -37,7 +37,6 @@ sap.ui.define([
 			var keys = Object.entries(this.holiday[0]);
 			var oCalendar = this.byId("calendar");
 			var TSmodel = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-
 			this.specialDate = [];
 			keys.forEach((v) => {
 				v[1].forEach((j) => {
@@ -64,7 +63,6 @@ sap.ui.define([
 			}));
 			this.timeSheetSelect(selectDate);
 			this.addSpecialDate();
-
 		},
 		onExit: function () {
 			if (this._oPopover) {
@@ -96,7 +94,6 @@ sap.ui.define([
 
 		},
 		timeSheetSelect: function (selectDate) {
-			console.log(selectDate)
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -131,16 +128,10 @@ sap.ui.define([
 						this.delBtn.setEnabled(false);
 						this.copyBtn.setEnabled(false);
 						var oCalendar = this.byId("calendar");
-						var index = oCalendar.getSpecialDates().findIndex(s => String(s.getStartDate()) == String(selectDate))
-						if(index >= 0){
-							oCalendar.removeSpecialDate(index);
+						var indexTS = oCalendar.getSpecialDates().findIndex(s => String(s.getStartDate()) == String(selectDate))
+						if (indexTS >= 0) {
+							oCalendar.removeSpecialDate(indexTS);
 						}
-
-						// oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
-						// 	startDate: new Date(fullDate),
-						// 	endDate: new Date(fullDate),
-						// 	type: sap.ui.unified.CalendarDayType.Type01
-						// }));
 					}
 
 				})
@@ -228,8 +219,39 @@ sap.ui.define([
 		},
 		copyTo: function (oEvent) {
 			var oButton = oEvent.getSource();
+			if (!this._oPopover) {
+				Fragment.load({
+					id: "copyTo",
+					name: "ICS_TimeSheet.ICS_TimeSheet.view.copyTo",
+					controller: this
+				}).then(function (oPopover) {
+					this._oPopover = oPopover;
+					this.getView().addDependent(this._oPopover);
+					this._oPopover.openBy(oButton);
+					this.calendarCopy();
+				}.bind(this));
+			} else {
+				this._oPopover.openBy(oButton);
+				this.calendarCopy();
+			}
+		},
+		onClose: function () {
+			this._oPopover.close();
+		},
+		onSubmitCopy: function () {
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
+			var cal = this.byId("calendar");
+			var date = cal.getSelectedDates()[0].getStartDate();
+			var oModel = this.getView().getModel("timeSheet");
+			var oModelData = oModel.getProperty("/TS");
+			var getYear = date.getFullYear();
+			var getMonth = date.getMonth();
+			var getDate = date.getDate();
+			var fullDate = getYear + "" + getMonth + "" + getDate;
+			var index = oModelData.findIndex(s => s.ID == fullDate)
+			var calCopy = this.byId("calendarCopy");
+			console.log(calCopy)
 			if (getAM == true && getPM == true) {
 				console.log("msg")
 			} else if (getAM == true) {
@@ -237,19 +259,47 @@ sap.ui.define([
 			} else if (getPM == true) {
 				console.log("msg")
 			}
+		},
+		calendarCopy: function (oEvent) {
+			// var oCtx = oEvent.getSource().getBindingContext();
+			var oCalendarCopy = Fragment.byId("copyTo", "calendarCopy");
+			var keys = Object.entries(this.holiday[0]);
+			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var TSEntry = Object.entries(TS);
+			// this.specialDate = [];
+			keys.forEach((v) => {
+				v[1].forEach((j) => {
+					var fullDate = j.month + "/" + j.startDate + "/" + v[0];
+					// this.specialDate.push(fullDate);
+					oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						startDate: new Date(fullDate),
+						endDate: new Date(fullDate),
+						type: sap.ui.unified.CalendarDayType.NonWorking,
+						tooltip: j.title
+					}));
+				})
+			})
+			
+			TSEntry.forEach((count) => {
+				var status = [];
+				Object.entries(count[1].Session).forEach((sessions) => {
+					if (count[1].Session.length = 2) {
+						status.push(sessions[1].status)
+					}
+				})
+				var check = ["Confirmed", "Confirmed"];
+				var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
+				if (JSON.stringify(status) === JSON.stringify(check)) {
+					oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						startDate: new Date(fullDate),
+						endDate: new Date(fullDate),
+						type: sap.ui.unified.CalendarDayType.Type08
+					}));
+				}else{
+					
+				}
+			})
 
-			if (!this._oPopover) {
-				Fragment.load({
-					name: "sap.m.sample.ResponsivePopover.view.copyTo",
-					controller: this
-				}).then(function (oPopover) {
-					this._oPopover = oPopover;
-					this.getView().addDependent(this._oPopover);
-					this._oPopover.openBy(oButton);
-				}.bind(this));
-			} else {
-				this._oPopover.openBy(oButton);
-			}
 		},
 		deleteSession: function () {
 			var cal = this.byId("calendar");

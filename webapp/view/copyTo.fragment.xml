@@ -1,16 +1,26 @@
-<core:FragmentDefinition
-	xmlns="sap.m"
-	xmlns:core="sap.ui.core">
-	<ResponsivePopover
-		class="sapUiPopupWithPadding"
-		placement="Bottom" >
-		<beginButton>
-			<Button text="Action-A" press="handleCloseButton" />
-		</beginButton>
-		<endButton>
-			<Button text="Action-B" press="handleCloseButton" />
-		</endButton>
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified">
+	<Popover class="sapUiPopupWithPadding" placement="Top" modal="true" title="{view>/selectDate} Copy To" titleAlignment="Center">
+		<!--<beginButton design="Footer">-->
+		<!--	<Button text="Action-A" press="handleCloseButton" />-->
+		<!--</beginButton>-->
+		<!--<endButton>-->
+		<!--	<Button text="Action-B" press="handleCloseButton" />-->
+		<!--</endButton>-->
 		<content>
+			<u:Calendar id="calendarCopy" select="handleCalendarSelectCopy" intervalSelection="false" singleSelection="false"
+			showWeekNumbers="false"/>
 		</content>
-	</ResponsivePopover>
+		<footer>
+			<OverflowToolbar width="100%" height="auto" design="Auto" enabled="true" visible="true">
+				<ToolbarSpacer/>
+				<Button type="Emphasized" text="Submit" press="onSubmitCopy">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+				<Button type="Reject" text="Cancle" press="onClose">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+			</OverflowToolbar>
+			<!--<Button text="Action-B" press="handleCloseButton"/>-->
+		</footer>
+	</Popover>
 </core:FragmentDefinition>
