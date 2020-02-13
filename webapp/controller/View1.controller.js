@@ -78,13 +78,16 @@ sap.ui.define([
 					}
 				})
 				var check = ["Confirmed", "Confirmed"]
+				console.log(status)
 				var fullDate = count[1].Year + "" + getMonth + "" + getDate;
 				var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
 				if (el) {
 					if (JSON.stringify(status) === JSON.stringify(check)) {
 						el.childNodes[2].style.color = 'black';
+						console.log("black");
 					} else {
 						el.childNodes[2].style.color = 'red';
+						console.log("red");
 					}
 				}
 			})

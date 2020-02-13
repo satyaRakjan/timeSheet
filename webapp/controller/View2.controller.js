@@ -39,22 +39,6 @@ sap.ui.define([
 
 		},
 		onAfterRendering: function () {
-			var keys = Object.entries(this.holiday[0]);
-			var oCalendar = this.byId("calendar");
-			var TSmodel = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			this.specialDate = [];
-			keys.forEach((v) => {
-				v[1].forEach((j) => {
-					var fullDate = j.month + "/" + j.startDate + "/" + v[0];
-					this.specialDate.push(fullDate);
-					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
-						startDate: new Date(fullDate),
-						endDate: new Date(fullDate),
-						type: sap.ui.unified.CalendarDayType.NonWorking,
-						tooltip: j.title
-					}));
-				})
-			})
 
 		},
 		_onObjectMatched: function (oEvent) {
@@ -77,6 +61,7 @@ sap.ui.define([
 
 		addSpecialDate: function () {
 			var oCalendar = this.byId("calendar");
+			oCalendar.removeAllSpecialDates();
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
 			TSEntry.forEach((count) => {
@@ -95,6 +80,20 @@ sap.ui.define([
 						type: sap.ui.unified.CalendarDayType.Type08
 					}));
 				}
+			})
+			var keys = Object.entries(this.holiday[0]);
+			this.specialDate = [];
+			keys.forEach((v) => {
+				v[1].forEach((j) => {
+					var fullDate = j.month + "/" + j.startDate + "/" + v[0];
+					this.specialDate.push(fullDate);
+					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						startDate: new Date(fullDate),
+						endDate: new Date(fullDate),
+						type: sap.ui.unified.CalendarDayType.NonWorking,
+						tooltip: j.title
+					}));
+				})
 			})
 
 		},
@@ -134,9 +133,14 @@ sap.ui.define([
 						this.copyBtn.setEnabled(false);
 						var oCalendar = this.byId("calendar");
 						var indexTS = oCalendar.getSpecialDates().findIndex(s => String(s.getStartDate()) == String(selectDate))
-						if (indexTS >= 0) {
-							oCalendar.removeSpecialDate(indexTS);
+						if (selectDate == null) {
+							oCalendar.removeAllSelectedDates();
+							this.addSpecialDate()
+
 						}
+						// if (indexTS >= 0) {
+						// 	oCalendar.removeSpecialDate(indexTS);
+						// }
 					}
 
 				})
@@ -247,18 +251,6 @@ sap.ui.define([
 			this.oModel.setData(oData);
 			this._oPopover.close();
 		},
-		onSubmitCopy: function () {
-			var cal = this.byId("calendar");
-			var date = cal.getSelectedDates()[0].getStartDate();
-			var oModel = this.getView().getModel("timeSheet");
-			var oModelData = oModel.getProperty("/TS");
-			var getYear = date.getFullYear();
-			var getMonth = date.getMonth();
-			var getDate = date.getDate();
-			var fullDate = getYear + "" + getMonth + "" + getDate;
-			var index = oModelData.findIndex(s => s.ID == fullDate)
-			var calCopy = this.byId("calendarCopy");
-		},
 		calendarCopy: function () {
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected()
@@ -268,6 +260,7 @@ sap.ui.define([
 			var keys = Object.entries(this.holiday[0]);
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
+			this.Status = "";
 			oCalendarCopy.removeAllSelectedDates()
 			oCalendarCopy.removeAllSpecialDates();
 			// this.specialDate = [];
@@ -288,6 +281,7 @@ sap.ui.define([
 				// var status = [];
 				var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
 				if (getAM == true && getPM == true) {
+					this.Status = "All";
 					if (count[1].Session[0].status || count[1].Session[1].status) {
 						oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
 							startDate: new Date(fullDate),
@@ -296,6 +290,7 @@ sap.ui.define([
 						}));
 					}
 				} else if (getAM == true) {
+					this.Status = "AM";
 					if (count[1].Session[0].status) {
 						oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
 							startDate: new Date(fullDate),
@@ -306,6 +301,7 @@ sap.ui.define([
 
 					}
 				} else if (getPM == true) {
+					this.Status = "PM";
 					if (count[1].Session[1].status) {
 						oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
 							startDate: new Date(fullDate),
@@ -323,7 +319,8 @@ sap.ui.define([
 			var oCalendar = oEvent.getSource(),
 				aSelectedDates = oCalendar.getSelectedDates(),
 				oData = {
-					selectedDates: []
+					selectedDates: [],
+					Date: []
 				},
 				oDate,
 				DateID,
@@ -341,11 +338,12 @@ sap.ui.define([
 						var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 							pattern: " d MMM yyyy"
 						});
-						var dateFormatted = oDateFormat.format(aSelectedDates[i].getStartDate());
-						console.log(dateFormatted)
+						var dateFormatted = oDateFormat.format(oDate);
+						var dateFormatted = oDateFormat.format(oDate);
 						oData.selectedDates.push({
 							Date: dateFormatted
 						});
+						oData.Date.push(oDate);
 
 						// oData.selectedDates.push({
 						// 	Date: this.oFormatYyyymmdd.format(oDate)
@@ -358,7 +356,60 @@ sap.ui.define([
 				var oData = {
 					selectedDates: []
 				};
+				this.oModel.setData(oData);
 			}
+		},
+		onSubmitCopy: function () {
+			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
+			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
+			var cal = this.byId("calendar");
+			var date = cal.getSelectedDates()[0].getStartDate();
+			var oModel = this.getView().getModel("timeSheet");
+			var oModelData = oModel.getProperty("/TS");
+			var getYear = date.getFullYear();
+			var getMonth = date.getMonth();
+			var getDate = date.getDate();
+			var fullDate = getYear + "" + getMonth + "" + getDate;
+			var index = oModelData.findIndex(s => s.ID == fullDate)
+			var seleteArr = this.oModel.oData.Date;
+			var msg = 'copy success.';
+			var obj = "";
+			for (var i in seleteArr) {
+				var yearSelect = seleteArr[i].getFullYear();
+				var monthSelect = seleteArr[i].getMonth();
+				var dateSelect = seleteArr[i].getDate();
+				var fullDateSelect = yearSelect + "" + monthSelect + "" + dateSelect;
+				if (this.Status == "All") {
+					var TSdata = oModel.getProperty("/TS/" + index + "/Session");
+					var newObject = {
+						"ID": fullDateSelect,
+						"Year": yearSelect,
+						"Month": monthSelect,
+						"Date": dateSelect,
+						"Session": TSdata
+					}
+					oModelData.push(newObject);
+					oModel.setProperty("/TS", oModelData);
+					// var TSdata = {
+					// 	ID: fullDateSelect,
+					// 	startDate: startDate,
+					// 	endDate: endDate,
+					// 	status: status
+					// };
+				}
+			}
+			this.onClose();
+
+			// if (getAM == true && getPM == true) {
+			// 	obj = oModel.getProperty("/TS/" + index + "/Session");
+			// 	MessageToast.show(msg);
+			// } else if (getAM == true) {
+			// 	obj = oModel.getProperty("/TS/" + index + "/Session/0");
+			// 	MessageToast.show(msg);
+			// } else if (getPM == true) {
+			// 	obj = oModel.getProperty("/TS/" + index + "/Session/1");
+			// 	MessageToast.show(msg);
+			// }
 		},
 		handleRemoveSelection: function () {
 			var oCalendarCopy = Fragment.byId("copyTo", "calendarCopy");
@@ -398,7 +449,8 @@ sap.ui.define([
 				});
 				MessageToast.show(msg);
 			}
-			this.timeSheetSelect();
+			var selectDate = null;
+			this.timeSheetSelect(selectDate);
 			// location.reload();
 		}
 	});

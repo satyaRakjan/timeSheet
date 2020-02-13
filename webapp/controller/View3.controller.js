@@ -87,33 +87,52 @@ sap.ui.define([
 				status: status
 			};
 			var oModelData = oModel.getProperty("/TS");
-			// var index = oModelData.findIndex(s => s.ID == fullDate)
 			var index = oModelData.findIndex(s => s.ID == fullDate)
 			var msg = 'success.';
 			if (index >= 0) {
 				var getOModel = oModel.getProperty("/TS/" + index + "/Session");
+				console.log(getOModel)
+				var sessionKey = getOModel.findIndex(s => s.ID == getSession)
+				if (sessionKey >= 0) {
+					console.log(oModel.getProperty("/TS/" + index))
 
-				try {
-					var sessionKey = getOModel.findIndex(s => s.ID == getSession)
-					if (sessionKey >= 0) {
-						oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
-						oModel.updateBindings();
-						MessageToast.show(msg);
-					} else {
+					oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
+					// oModel.updateBindings();
+					MessageToast.show(msg);
+					console.log("update")
+				} else {
+					console.log(false)
 						// getOModel.push(TSdata);
 						// oModel.setProperty("/TS/" + index + "/Session", getOModel);
 						// oModel.updateBindings();
 						// MessageToast.show(msg);
-					}
-
-				} catch (err) {
-					// console.log(getOModel)
-					// getOModel.push(TSdata);
-					// oModel.setProperty("/TS/" + index + "/Session", getOModel);
-					// oModel.updateBindings();
-					// MessageToast.show(msg);
-
 				}
+
+				// try {
+				// 	var sessionKey = getOModel.findIndex(s => s.ID == getSession)
+				// 	if (sessionKey >= 0) {
+				// 		oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
+				// 		// oModel.updateBindings();
+				// 		MessageToast.show(msg);
+				// 		break;
+				// 		console.log("update")
+				// 	} else {
+				// 		console.log(false)
+				// 			// getOModel.push(TSdata);
+				// 			// oModel.setProperty("/TS/" + index + "/Session", getOModel);
+				// 			// oModel.updateBindings();
+				// 			// MessageToast.show(msg);
+				// 	}
+
+				// } catch (err) {
+				// 	console.log("err")
+				// 		// console.log(getOModel)
+				// 		// getOModel.push(TSdata);
+				// 		// oModel.setProperty("/TS/" + index + "/Session", getOModel);
+				// 		// oModel.updateBindings();
+				// 		// MessageToast.show(msg);
+
+				// }
 			} else {
 				var addObj = [];
 				if (getSession == "AM") {
@@ -138,6 +157,7 @@ sap.ui.define([
 				oModel.setProperty("/TS", oModelData);
 				oModel.updateBindings()
 				MessageToast.show(msg);
+				console.log("add New")
 			}
 		},
 
