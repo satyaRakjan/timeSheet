@@ -306,22 +306,46 @@ sap.ui.define([
 
 					}
 				}
-				Object.entries(count[1].Session).forEach((sessions) => {
-
-					})
-					// var check = ["Confirmed", "Confirmed"];
-					// var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
-					// if (JSON.stringify(status) === JSON.stringify(check)) {
-					// 	oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
-					// 		startDate: new Date(fullDate),
-					// 		endDate: new Date(fullDate),
-					// 		type: sap.ui.unified.CalendarDayType.Type08
-					// 	}));
-					// } else {
-
-				// }
 			})
 
+		},
+		handleCalendarSelectCopy: function (oEvent) {
+			var oCalendar = oEvent.getSource(),
+				aSelectedDates = oCalendar.getSelectedDates(),
+				oData = {
+					selectedDates: []
+				},
+				oDate,
+				DateID,
+				i,
+				specialDateArr = oCalendar.getSpecialDates();
+
+			if (aSelectedDates.length > 0) {
+				for (i = 0; i < aSelectedDates.length; i++) {
+					oDate = aSelectedDates[i].getStartDate();
+					var found = specialDateArr.find(s => String(s.getStartDate()) == String(oDate))
+					if (found) {
+						oCalendar.removeSelectedDate(i)
+						MessageToast.show("can't copy.");
+					} else {
+						// oData.selectedDates.push({
+						// 	Date: this.oFormatYyyymmdd.format(oDate)
+						// });
+
+					}
+				}
+				// this.oModel.setData(oData);
+			} else {
+				var oData = {
+					selectedDates: []
+				};
+			}
+			// specialDateArr.forEach((count) => {
+			// 	console.log(dateID)
+			// 	if(count.getId() == String(dateID)){
+			// 		console.log(true)
+			// 	}
+			// })
 		},
 		deleteSession: function () {
 			var cal = this.byId("calendar");
