@@ -15,6 +15,11 @@ sap.ui.define([
 			this.PMIcon = this.byId("PMIcon");
 			this.delBtn = this.byId("delBtn");
 			this.copyBtn = this.byId("copyBtn");
+			this.oModel = new JSONModel({
+				selectedDates: []
+			});
+			this.getView().setModel(this.oModel);
+
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView2").attachPatternMatched(this._onObjectMatched, this);
 			var oLeg1 = this.getView().byId("legend1");
@@ -236,6 +241,10 @@ sap.ui.define([
 
 		},
 		onClose: function () {
+			var oData = {
+				selectedDates: []
+			};
+			this.oModel.setData(oData);
 			this._oPopover.close();
 		},
 		onSubmitCopy: function () {
@@ -259,6 +268,7 @@ sap.ui.define([
 			var keys = Object.entries(this.holiday[0]);
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
+			oCalendarCopy.removeAllSelectedDates()
 			oCalendarCopy.removeAllSpecialDates();
 			// this.specialDate = [];
 			keys.forEach((v) => {
@@ -328,24 +338,35 @@ sap.ui.define([
 						oCalendar.removeSelectedDate(i)
 						MessageToast.show("can't copy.");
 					} else {
+						var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+							pattern: " d MMM yyyy"
+						});
+						var dateFormatted = oDateFormat.format(aSelectedDates[i].getStartDate());
+						console.log(dateFormatted)
+						oData.selectedDates.push({
+							Date: dateFormatted
+						});
+
 						// oData.selectedDates.push({
 						// 	Date: this.oFormatYyyymmdd.format(oDate)
 						// });
-
+						// this.oModel.setData(oData);
 					}
 				}
-				// this.oModel.setData(oData);
+				this.oModel.setData(oData);
 			} else {
 				var oData = {
 					selectedDates: []
 				};
 			}
-			// specialDateArr.forEach((count) => {
-			// 	console.log(dateID)
-			// 	if(count.getId() == String(dateID)){
-			// 		console.log(true)
-			// 	}
-			// })
+		},
+		handleRemoveSelection: function () {
+			var oCalendarCopy = Fragment.byId("copyTo", "calendarCopy");
+			oCalendarCopy.removeAllSelectedDates();
+			var oData = {
+				selectedDates: []
+			};
+			this.oModel.setData(oData);
 		},
 		deleteSession: function () {
 			var cal = this.byId("calendar");
@@ -357,7 +378,6 @@ sap.ui.define([
 			var getDate = date.getDate();
 			var fullDate = getYear + "" + getMonth + "" + getDate;
 			var index = oModelData.findIndex(s => s.ID == fullDate)
-				// var getOModel = oModel.getProperty("/TS/" + index + "/Session");
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
 			var msg = 'Deleted.';
@@ -379,7 +399,6 @@ sap.ui.define([
 				MessageToast.show(msg);
 			}
 			this.timeSheetSelect();
-
 			// location.reload();
 		}
 	});
