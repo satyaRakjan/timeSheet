@@ -379,23 +379,22 @@ sap.ui.define([
 				var monthSelect = seleteArr[i].getMonth();
 				var dateSelect = seleteArr[i].getDate();
 				var fullDateSelect = yearSelect + "" + monthSelect + "" + dateSelect;
+				var TSAM = oModel.getProperty("/TS/" + index + "/Session/0");
+				var TSPM = oModel.getProperty("/TS/" + index + "/Session/1");
 				if (this.Status == "All") {
-					var TSdata = oModel.getProperty("/TS/" + index + "/Session");
 					var newObject = {
 						"ID": fullDateSelect,
 						"Year": yearSelect,
 						"Month": monthSelect,
 						"Date": dateSelect,
-						"Session": TSdata
+						"Session": [TSAM, TSPM]
 					}
 					oModelData.push(newObject);
 					oModel.setProperty("/TS", oModelData);
-					// var TSdata = {
-					// 	ID: fullDateSelect,
-					// 	startDate: startDate,
-					// 	endDate: endDate,
-					// 	status: status
-					// };
+				} else if (this.Status == "AM") {
+
+				} else if (this.Status == "PM") {
+
 				}
 			}
 			this.onClose();
