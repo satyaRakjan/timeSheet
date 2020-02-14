@@ -87,15 +87,13 @@ sap.ui.define([
 				status: status
 			};
 			var oModelData = oModel.getProperty("/TS");
-			var index = oModelData.findIndex(s => s.ID == fullDate)
+			var index = oModelData.findIndex(s => s.ID == fullDate);
 			var msg = 'success.';
 			if (index >= 0) {
 				var getOModel = oModel.getProperty("/TS/" + index + "/Session");
 				console.log(getOModel)
 				var sessionKey = getOModel.findIndex(s => s.ID == getSession)
 				if (sessionKey >= 0) {
-					console.log(oModel.getProperty("/TS/" + index))
-
 					oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
 					// oModel.updateBindings();
 					MessageToast.show(msg);

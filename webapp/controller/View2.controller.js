@@ -381,8 +381,9 @@ sap.ui.define([
 				var fullDateSelect = yearSelect + "" + monthSelect + "" + dateSelect;
 				var TSAM = oModel.getProperty("/TS/" + index + "/Session/0");
 				var TSPM = oModel.getProperty("/TS/" + index + "/Session/1");
+				var newObject = null;
 				if (this.Status == "All") {
-					var newObject = {
+					newObject = {
 						"ID": fullDateSelect,
 						"Year": yearSelect,
 						"Month": monthSelect,
@@ -391,24 +392,50 @@ sap.ui.define([
 					}
 					oModelData.push(newObject);
 					oModel.setProperty("/TS", oModelData);
+					MessageToast.show(msg);
 				} else if (this.Status == "AM") {
+					var indexAM = oModelData.findIndex(s => s.ID == fullDateSelect);
+					if (indexAM >= 0) {
+						oModel.setProperty("/TS/" + indexAM + "/Session/0", TSAM);
+						MessageToast.show(msg);
+					} else {
+						newObject = {
+							"ID": fullDateSelect,
+							"Year": yearSelect,
+							"Month": monthSelect,
+							"Date": dateSelect,
+							"Session": [TSAM, {
+								ID: "PM"
+							}]
+						}
+						oModelData.push(newObject);
+						oModel.setProperty("/TS", oModelData);
+						MessageToast.show(msg);
+					}
 
 				} else if (this.Status == "PM") {
+					var indexPM = oModelData.findIndex(s => s.ID == fullDateSelect);
+					if (indexPM >= 0) {
+						oModel.setProperty("/TS/" + indexPM + "/Session/1", TSPM);
+						MessageToast.show(msg);
+					} else {
+						console.log(TSPM)
+						newObject = {
+							"ID": fullDateSelect,
+							"Year": yearSelect,
+							"Month": monthSelect,
+							"Date": dateSelect,
+							"Session": [{
+								ID: "AM"
+							}, TSPM]
+						}
+						oModelData.push(newObject);
+						oModel.setProperty("/TS", oModelData);
 
+					}
 				}
 			}
 			this.onClose();
-
-			// if (getAM == true && getPM == true) {
-			// 	obj = oModel.getProperty("/TS/" + index + "/Session");
-			// 	MessageToast.show(msg);
-			// } else if (getAM == true) {
-			// 	obj = oModel.getProperty("/TS/" + index + "/Session/0");
-			// 	MessageToast.show(msg);
-			// } else if (getPM == true) {
-			// 	obj = oModel.getProperty("/TS/" + index + "/Session/1");
-			// 	MessageToast.show(msg);
-			// }
 		},
 		handleRemoveSelection: function () {
 			var oCalendarCopy = Fragment.byId("copyTo", "calendarCopy");
