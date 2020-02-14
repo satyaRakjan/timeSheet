@@ -327,13 +327,21 @@ sap.ui.define([
 				i,
 				specialDateArr = oCalendar.getSpecialDates();
 
+			var currentDate = new Date();
+			currentDate.setDate(5);
+			currentDate.setHours(0, 0, 0, 0);
+
 			if (aSelectedDates.length > 0) {
 				for (i = 0; i < aSelectedDates.length; i++) {
 					oDate = aSelectedDates[i].getStartDate();
 					var found = specialDateArr.find(s => String(s.getStartDate()) == String(oDate))
+
 					if (found) {
 						oCalendar.removeSelectedDate(i)
 						MessageToast.show("can't copy.");
+					} else if (oDate < currentDate) {
+						oCalendar.removeSelectedDate(i)
+						MessageToast.show("Time out to Time stamp");
 					} else {
 						var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 							pattern: " d MMM yyyy"
