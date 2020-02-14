@@ -64,99 +64,76 @@ sap.ui.define([
 			var getYear = date.getFullYear();
 			var getMonth = date.getMonth();
 			var getDate = date.getDate();
-			var fullDate = getYear + "" + getMonth + "" + getDate;
-			var oModel = this.getView().getModel("timeSheet");
-			var oSelect = this.byId("sessions").getSelectedKey();
-			var getSession = "";
-			var startDate = "";
-			var endDate = "";
-			var status = this.byId("status").getSelectedKey();
-			if (oSelect == "Morning") {
-				getSession = "AM";
-				startDate = "9";
-				endDate = "12";
-			} else if (oSelect == "Afternoon") {
-				getSession = "PM";
-				startDate = "13";
-				endDate = "18";
-			}
-			var TSdata = {
-				ID: getSession,
-				startDate: startDate,
-				endDate: endDate,
-				status: status
-			};
-			var oModelData = oModel.getProperty("/TS");
-			var index = oModelData.findIndex(s => s.ID == fullDate);
-			var msg = 'success.';
-			if (index >= 0) {
-				var getOModel = oModel.getProperty("/TS/" + index + "/Session");
-				console.log(getOModel)
-				var sessionKey = getOModel.findIndex(s => s.ID == getSession)
-				if (sessionKey >= 0) {
-					oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
-					// oModel.updateBindings();
-					MessageToast.show(msg);
-					console.log("update")
-				} else {
-					console.log(false)
-						// getOModel.push(TSdata);
-						// oModel.setProperty("/TS/" + index + "/Session", getOModel);
-						// oModel.updateBindings();
-						// MessageToast.show(msg);
-				}
-
-				// try {
-				// 	var sessionKey = getOModel.findIndex(s => s.ID == getSession)
-				// 	if (sessionKey >= 0) {
-				// 		oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
-				// 		// oModel.updateBindings();
-				// 		MessageToast.show(msg);
-				// 		break;
-				// 		console.log("update")
-				// 	} else {
-				// 		console.log(false)
-				// 			// getOModel.push(TSdata);
-				// 			// oModel.setProperty("/TS/" + index + "/Session", getOModel);
-				// 			// oModel.updateBindings();
-				// 			// MessageToast.show(msg);
-				// 	}
-
-				// } catch (err) {
-				// 	console.log("err")
-				// 		// console.log(getOModel)
-				// 		// getOModel.push(TSdata);
-				// 		// oModel.setProperty("/TS/" + index + "/Session", getOModel);
-				// 		// oModel.updateBindings();
-				// 		// MessageToast.show(msg);
-
-				// }
+			var currentDate = new Date();
+			currentDate.setDate(5);
+			currentDate.setHours(0,0,0,0);
+			if (date < currentDate) {
+				MessageToast.show("Time out to Time stamp");
 			} else {
-				var addObj = [];
-				if (getSession == "AM") {
-					addObj.push(TSdata, {
-						ID: "PM"
-					})
-
-				} else if (getSession == "PM") {
-					addObj.push({
-						ID: "AM"
-					}, TSdata)
-
+				var fullDate = getYear + "" + getMonth + "" + getDate;
+				var oModel = this.getView().getModel("timeSheet");
+				var oSelect = this.byId("sessions").getSelectedKey();
+				var getSession = "";
+				var startDate = "";
+				var endDate = "";
+				var status = this.byId("status").getSelectedKey();
+				if (oSelect == "Morning") {
+					getSession = "AM";
+					startDate = "9";
+					endDate = "12";
+				} else if (oSelect == "Afternoon") {
+					getSession = "PM";
+					startDate = "13";
+					endDate = "18";
 				}
-				var newObject = {
-					"ID": fullDate,
-					"Year": getYear,
-					"Month": getMonth,
-					"Date": getDate,
-					"Session": addObj
+				var TSdata = {
+					ID: getSession,
+					startDate: startDate,
+					endDate: endDate,
+					status: status
+				};
+				var oModelData = oModel.getProperty("/TS");
+				var index = oModelData.findIndex(s => s.ID == fullDate);
+				var msg = 'success.';
+				if (index >= 0) {
+					var getOModel = oModel.getProperty("/TS/" + index + "/Session");
+					console.log(getOModel)
+					var sessionKey = getOModel.findIndex(s => s.ID == getSession)
+					if (sessionKey >= 0) {
+						oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
+						oModel.updateBindings();
+						MessageToast.show(msg);
+					} else {
+						console.log(false)
+					}
+				} else {
+					var addObj = [];
+					if (getSession == "AM") {
+						addObj.push(TSdata, {
+							ID: "PM"
+						})
+
+					} else if (getSession == "PM") {
+						addObj.push({
+							ID: "AM"
+						}, TSdata)
+
+					}
+					var newObject = {
+						"ID": fullDate,
+						"Year": getYear,
+						"Month": getMonth,
+						"Date": getDate,
+						"Session": addObj
+					}
+					oModelData.push(newObject);
+					oModel.setProperty("/TS", oModelData);
+					oModel.updateBindings()
+					MessageToast.show(msg);
 				}
-				oModelData.push(newObject);
-				oModel.setProperty("/TS", oModelData);
-				oModel.updateBindings()
-				MessageToast.show(msg);
-				console.log("add New")
+
 			}
+
 		},
 
 		onNavBack: function () {
