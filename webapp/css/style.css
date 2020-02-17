@@ -15,9 +15,15 @@
 .sapMSPCMonthDayNumber {
     color: red;
 }
-.sapUiCalItem.sapUiCalItemType08 {
-     background-color: #00D534    ;
+
+.sapUiCalItem.sapUiCalItemType18 {
+    background-color: #06B02F;
 }
-.sapUiUnifiedLegendItem.sapUiUnifiedLegendNonWorkingDay{
+
+.sapUiCalItem.sapUiCalItemType02 {
+    background-color: #F80404;
+}
+
+.sapUiUnifiedLegendItem.sapUiUnifiedLegendNonWorkingDay {
     display: none;
 }

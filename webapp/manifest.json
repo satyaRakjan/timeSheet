@@ -71,11 +71,11 @@
 				"preload": false,
 				"uri": "data/timeSheet.json"
 			},
-			"test": {
+			"leave": {
 				"type": "sap.ui.model.json.JSONModel",
 				"settings": {},
 				"preload": false,
-				"uri": "data/spare.json"
+				"uri": "data/leave.json"
 			}
 
 		},

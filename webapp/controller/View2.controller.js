@@ -28,11 +28,11 @@ sap.ui.define([
 				text: "Weekend & Holiday"
 			}));
 			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
-				color: "#00D534",
+				color: "#06B02F",
 				text: "Done"
 			}));
 			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
-				color: "red",
+				color: "#F80404",
 				text: "Leave"
 			}));
 			this.addSpecialDate();
@@ -77,7 +77,7 @@ sap.ui.define([
 					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
 						startDate: new Date(fullDate),
 						endDate: new Date(fullDate),
-						type: sap.ui.unified.CalendarDayType.Type08
+						type: sap.ui.unified.CalendarDayType.Type18
 					}));
 				}
 			})
@@ -96,8 +96,23 @@ sap.ui.define([
 				})
 			})
 
+			var leave = this.getOwnerComponent().getModel("leave").getProperty("/leave");
+			var leaveEntry = Object.entries(leave);
+			leaveEntry.forEach((count) => {
+				Object.entries(count[1].Session).forEach((sessions) => {
+					var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
+					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+						startDate: new Date(fullDate),
+						endDate: new Date(fullDate),
+						type: sap.ui.unified.CalendarDayType.Type02
+					}));
+
+				})
+			})
+
 		},
 		timeSheetSelect: function (selectDate) {
+			this.addSpecialDate();
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -105,6 +120,8 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 				selectDate: dateFormatted
 			});
+
+			console.log(selectDate)
 			this.byId("sessionList").setMode("None");
 			this.AMIcon.setSrc("");
 			this.PMIcon.setSrc("");
@@ -133,14 +150,6 @@ sap.ui.define([
 						this.copyBtn.setEnabled(false);
 						var oCalendar = this.byId("calendar");
 						var indexTS = oCalendar.getSpecialDates().findIndex(s => String(s.getStartDate()) == String(selectDate))
-						if (selectDate == null) {
-							oCalendar.removeAllSelectedDates();
-							this.addSpecialDate()
-
-						}
-						// if (indexTS >= 0) {
-						// 	oCalendar.removeSpecialDate(indexTS);
-						// }
 					}
 
 				})
@@ -328,35 +337,36 @@ sap.ui.define([
 				specialDateArr = oCalendar.getSpecialDates();
 
 			var currentDate = new Date();
-			currentDate.setDate(5);
+			// currentDate.setDate(5);
 			currentDate.setHours(0, 0, 0, 0);
-
+			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+				pattern: " d MMM yyyy"
+			});
 			if (aSelectedDates.length > 0) {
 				for (i = 0; i < aSelectedDates.length; i++) {
 					oDate = aSelectedDates[i].getStartDate();
-					var found = specialDateArr.find(s => String(s.getStartDate()) == String(oDate))
-
+					var found = specialDateArr.find(s => String(s.getStartDate()) == String(oDate));
+					var dateFormatted = oDateFormat.format(oDate);
+					var dateFormatted = oDateFormat.format(oDate);
 					if (found) {
-						oCalendar.removeSelectedDate(i)
+						oCalendar.removeSelectedDate(i);
 						MessageToast.show("can't copy.");
-					} else if (oDate < currentDate) {
-						oCalendar.removeSelectedDate(i)
-						MessageToast.show("Time out to Time stamp");
+					} else if (currentDate.getDate() >= 5) {
+						if (oDate.getMonth() >= currentDate.getMonth()) {
+							oData.selectedDates.push({
+								Date: dateFormatted
+							});
+							oData.Date.push(oDate)
+						} else {
+							oCalendar.removeSelectedDate(i)
+							MessageToast.show("Time out to Time stamp");
+						}
+
 					} else {
-						var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-							pattern: " d MMM yyyy"
-						});
-						var dateFormatted = oDateFormat.format(oDate);
-						var dateFormatted = oDateFormat.format(oDate);
 						oData.selectedDates.push({
 							Date: dateFormatted
 						});
 						oData.Date.push(oDate);
-
-						// oData.selectedDates.push({
-						// 	Date: this.oFormatYyyymmdd.format(oDate)
-						// });
-						// this.oModel.setData(oData);
 					}
 				}
 				this.oModel.setData(oData);
@@ -443,6 +453,7 @@ sap.ui.define([
 					}
 				}
 			}
+			this.addSpecialDate();
 			this.onClose();
 		},
 		handleRemoveSelection: function () {
@@ -483,7 +494,7 @@ sap.ui.define([
 				});
 				MessageToast.show(msg);
 			}
-			var selectDate = null;
+			var selectDate = date;
 			this.timeSheetSelect(selectDate);
 			// location.reload();
 		}

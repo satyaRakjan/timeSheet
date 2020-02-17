@@ -14,9 +14,6 @@ sap.ui.define([
 			this.handleTimeSheet();
 
 		},
-		onBeforeRendering: function () {
-
-		},
 		onAfterRendering: function () {
 			var keys = Object.entries(this.holiday[0]);
 			keys.forEach((v) => {
@@ -78,7 +75,6 @@ sap.ui.define([
 					}
 				})
 				var check = ["Confirmed", "Confirmed"]
-				// console.log(status)
 				var fullDate = count[1].Year + "" + getMonth + "" + getDate;
 				var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
 				if (el) {
@@ -120,8 +116,6 @@ sap.ui.define([
 		handleTimeSheet: function () {
 			var cal = this.byId("SPC1");
 			cal.removeAllAppointments()
-
-			var oModel = this.getView().getModel("timeSheet");
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
 			TSEntry.forEach((count) => {
@@ -132,7 +126,25 @@ sap.ui.define([
 							endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
 							title: sessions[1].ID,
 							tooltip: sessions[1].ID,
-							type: sap.ui.unified.CalendarDayType.Type08
+							type: sap.ui.unified.CalendarDayType.Type18
+						}));
+					} catch (err) {
+
+					}
+
+				})
+			})
+			var leave = this.getOwnerComponent().getModel("leave").getProperty("/leave");
+			var leaveEntry = Object.entries(leave);
+			leaveEntry.forEach((count) => {
+				Object.entries(count[1].Session).forEach((sessions) => {
+					try {
+						cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+							startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+							endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+							title: sessions[1].ID + " (" + count[1].Type + ")",
+							tooltip: sessions[1].ID,
+							type: sap.ui.unified.CalendarDayType.Type02
 						}));
 					} catch (err) {
 

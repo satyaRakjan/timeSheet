@@ -1,0 +1,33 @@
+{
+	"leave": [{
+		"ID": 202015,
+		"Year": 2020,
+		"Month": 1,
+		"Date": 5,
+		"Type":"Personal Leave",
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12"
+		}, {
+			"ID": "PM",
+			"startDate": "13",
+			"endDate": "18"
+		}]
+	}, {
+		"ID": 202016,
+		"Year": 2020,
+		"Month": 1,
+		"Date": 6,
+		"Type":"Personal Leave",
+		"Session": [{
+			"ID": "AM",
+			"startDate": "9",
+			"endDate": "12"
+		},{
+			"ID": "PM",
+			"startDate": "13",
+			"endDate": "18"
+		}]
+	}]
+}
