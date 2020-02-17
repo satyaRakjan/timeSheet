@@ -11,7 +11,7 @@
 				<CustomListItem id="AM" type="Navigation" press="AMPress">
 					<FlexBox alignItems="Start" justifyContent="SpaceBetween">
 						<items>
-							<Label text="Morning"/>
+							<Label id="LabelAM" text="Morning"/>
 							<core:Icon id="AMIcon" size="1.5rem" src="" color="#0D9B2B"/>
 						</items>
 					</FlexBox>
@@ -19,7 +19,7 @@
 				<CustomListItem id="PM" type="Navigation" press="PMPress">
 					<FlexBox alignItems="Start" justifyContent="SpaceBetween">
 						<items>
-							<Label text="Afternoon"/>
+							<Label id="LabelPM" text="Afternoon"/>
 							<core:Icon id="PMIcon" size="1.5rem" src="" color="#0D9B2B"/>
 						</items>
 					</FlexBox>

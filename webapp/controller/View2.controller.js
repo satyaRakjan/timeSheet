@@ -120,8 +120,11 @@ sap.ui.define([
 			var oViewModel = new JSONModel({
 				selectDate: dateFormatted
 			});
-
-			console.log(selectDate)
+			var selFullDate = String(selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate());
+			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var leave = this.getOwnerComponent().getModel("leave").getProperty("/leave");
+			var foundTS = TS.find(element => element.ID == selFullDate);
+			var foundLeave = leave.find(element => element.ID == selFullDate);
 			this.byId("sessionList").setMode("None");
 			this.AMIcon.setSrc("");
 			this.PMIcon.setSrc("");
@@ -130,30 +133,36 @@ sap.ui.define([
 			this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setEnabled(false);
 			this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setEnabled(false);
 			this.getView().setModel(oViewModel, "view");
-			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			var TSEntry = Object.entries(TS);
-			TSEntry.forEach((count) => {
-				Object.entries(count[1].Session).forEach((sessions) => {
-					var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
-					if (String(fullDate) == String(selectDate)) {
-						Object.entries(sessions).forEach((session) => {
-							if (session[1].status) {
-								this.list = this.byId(sessions[1].ID + "Icon");
-								this.list.setSrc("sap-icon://notes")
-								this.byId("container-ICS_TimeSheet---View2--" + sessions[1].ID + "-selectMulti").setEnabled(true)
-								this.byId("sessionList").setMode("MultiSelect");
-							}
-						})
-
-					} else {
-						this.delBtn.setEnabled(false);
-						this.copyBtn.setEnabled(false);
-						var oCalendar = this.byId("calendar");
-						var indexTS = oCalendar.getSpecialDates().findIndex(s => String(s.getStartDate()) == String(selectDate))
-					}
+			var listAM = document.getElementById("container-ICS_TimeSheet---View2--AM");
+			var listPM = document.getElementById("container-ICS_TimeSheet---View2--PM");
+			listAM.style.backgroundColor = '#ffffff';
+			listPM.style.backgroundColor = '#ffffff';
+			if (foundTS) {
+				Object.entries(foundTS.Session).forEach((obj) => {
+					this.list = this.byId(obj[1].ID + "Icon");
+					this.list.setSrc("sap-icon://notes")
+					this.byId("container-ICS_TimeSheet---View2--" + obj[1].ID + "-selectMulti").setEnabled(true)
+					this.byId("sessionList").setMode("MultiSelect");
 
 				})
-			})
+
+			} else if (foundLeave) {
+				// var a = this.byId("container-ICS_TimeSheet---View2--AM")
+				Object.entries(foundLeave.Session).forEach((obj) => {
+					// this.list = this.byId(obj[1].ID + "Icon");
+					var eID = "container-ICS_TimeSheet---View2--" + obj[1].ID;
+					var element = document.getElementById(eID);
+					element.style.backgroundColor = '#F80404';
+
+					// debugger
+					// this.byId(obj[1].ID).setType("Inactive");
+
+				})
+
+			} else {
+				this.delBtn.setEnabled(false);
+				this.copyBtn.setEnabled(false);
+			}
 		},
 
 		handleCalendarSelect: function (oEvent) {
