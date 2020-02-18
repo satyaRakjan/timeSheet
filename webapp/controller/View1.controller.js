@@ -65,25 +65,20 @@ sap.ui.define([
 				} else {
 					getDate = count[1].Date
 				}
-				Object.entries(count[1].Session).forEach((sessions) => {
-					if (count[1].Session.length = 2) {
-						try {
-							status.push(sessions[1].status)
-						} catch (err) {
-
-						}
-					}
-				})
-				var check = ["Confirmed", "Confirmed"]
-				var fullDate = count[1].Year + "" + getMonth + "" + getDate;
-				var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
-				if (el) {
-					if (JSON.stringify(status) === JSON.stringify(check)) {
+				try {
+					var fullDate = count[1].Year + "" + getMonth + "" + getDate;
+					var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
+					if (count[1].Session[0].status == "Confirmed" && count[1].Session[1].status == "Confirmed") {
 						el.childNodes[2].style.color = 'black';
-						console.log(el)
+					} else if (count[1].Session[0].status == "Confirmed" && count[1].Session[1].status == "Leave") {
+						el.childNodes[2].style.color = 'black';
+					} else if (count[1].Session[0].status == "Leave" && count[1].Session[1].status == "Confirmed") {
+						el.childNodes[2].style.color = 'black';
 					} else {
 						el.childNodes[2].style.color = 'red';
 					}
+				} catch (err) {
+
 				}
 			})
 		},
@@ -118,41 +113,35 @@ sap.ui.define([
 			cal.removeAllAppointments()
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
+
 			TSEntry.forEach((count) => {
-				Object.entries(count[1].Session).forEach((sessions) => {
-					try {
-						cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-							startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-							endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-							title: sessions[1].ID,
-							tooltip: sessions[1].ID,
-							type: sap.ui.unified.CalendarDayType.Type18
-						}));
-					} catch (err) {
+					Object.entries(count[1].Session).forEach((sessions) => {
+						try {
+							if (sessions[1].status == "Leave") {
+								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+									startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+									endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+									title: sessions[1].ID,
+									tooltip: sessions[1].ID,
+									type: sap.ui.unified.CalendarDayType.Type02
+								}));
 
-					}
+							} else {
+								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+									startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+									endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+									title: sessions[1].ID,
+									tooltip: sessions[1].ID,
+									type: sap.ui.unified.CalendarDayType.Type18
+								}));
+							}
 
+						} catch (err) {
+
+						}
+
+					})
 				})
-			})
-			var leave = this.getOwnerComponent().getModel("leave").getProperty("/leave");
-			var leaveEntry = Object.entries(leave);
-			leaveEntry.forEach((count) => {
-				Object.entries(count[1].Session).forEach((sessions) => {
-					try {
-						cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-							startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-							endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-							title: sessions[1].ID + " (" + count[1].Type + ")",
-							tooltip: sessions[1].ID,
-							type: sap.ui.unified.CalendarDayType.Type02
-						}));
-					} catch (err) {
-
-					}
-
-				})
-			})
-
 		},
 
 		handleCell: function (oEvent) {

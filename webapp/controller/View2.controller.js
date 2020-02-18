@@ -35,6 +35,10 @@ sap.ui.define([
 				color: "#F80404",
 				text: "Leave"
 			}));
+			oLeg1.addItem(new sap.ui.unified.CalendarLegendItem({
+				color: "#F8B504",
+				text: "Half day leave"
+			}));
 			this.addSpecialDate();
 
 		},
@@ -65,20 +69,29 @@ sap.ui.define([
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var TSEntry = Object.entries(TS);
 			TSEntry.forEach((count) => {
-				var status = [];
-				Object.entries(count[1].Session).forEach((sessions) => {
-					if (count[1].Session.length = 2) {
-						status.push(sessions[1].status)
+				try {
+					var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
+					if (count[1].Session[0].status == "Confirmed" && count[1].Session[1].status == "Confirmed") {
+						oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+							startDate: new Date(fullDate),
+							endDate: new Date(fullDate),
+							type: sap.ui.unified.CalendarDayType.Type18
+						}));
+					} else if (count[1].Session[0].status == "Leave" && count[1].Session[1].status == "Leave") {
+						oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+							startDate: new Date(fullDate),
+							endDate: new Date(fullDate),
+							type: sap.ui.unified.CalendarDayType.Type02
+						}));
+					} else if (count[1].Session[0].status == "Leave" || count[1].Session[1].status == "Leave") {
+						oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
+							startDate: new Date(fullDate),
+							endDate: new Date(fullDate),
+							type: sap.ui.unified.CalendarDayType.Type01
+						}));
 					}
-				})
-				var check = ["Confirmed", "Confirmed"];
-				var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
-				if (JSON.stringify(status) === JSON.stringify(check)) {
-					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
-						startDate: new Date(fullDate),
-						endDate: new Date(fullDate),
-						type: sap.ui.unified.CalendarDayType.Type18
-					}));
+				} catch (err) {
+
 				}
 			})
 			var keys = Object.entries(this.holiday[0]);
@@ -95,21 +108,6 @@ sap.ui.define([
 					}));
 				})
 			})
-
-			var leave = this.getOwnerComponent().getModel("leave").getProperty("/leave");
-			var leaveEntry = Object.entries(leave);
-			leaveEntry.forEach((count) => {
-				Object.entries(count[1].Session).forEach((sessions) => {
-					var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
-					oCalendar.addSpecialDate(new sap.ui.unified.DateTypeRange({
-						startDate: new Date(fullDate),
-						endDate: new Date(fullDate),
-						type: sap.ui.unified.CalendarDayType.Type02
-					}));
-
-				})
-			})
-
 		},
 		timeSheetSelect: function (selectDate) {
 			this.addSpecialDate();
@@ -124,7 +122,6 @@ sap.ui.define([
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
 			var leave = this.getOwnerComponent().getModel("leave").getProperty("/leave");
 			var foundTS = TS.find(element => element.ID == selFullDate);
-			var foundLeave = leave.find(element => element.ID == selFullDate);
 			this.byId("sessionList").setMode("None");
 			this.AMIcon.setSrc("");
 			this.PMIcon.setSrc("");
@@ -132,6 +129,8 @@ sap.ui.define([
 			this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setSelected(false);
 			this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setEnabled(false);
 			this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setEnabled(false);
+			this.byId("AM").setBlocked(false);
+			this.byId("PM").setBlocked(false);
 			this.getView().setModel(oViewModel, "view");
 			var listAM = document.getElementById("container-ICS_TimeSheet---View2--AM");
 			var listPM = document.getElementById("container-ICS_TimeSheet---View2--PM");
@@ -139,26 +138,18 @@ sap.ui.define([
 			listPM.style.backgroundColor = '#ffffff';
 			if (foundTS) {
 				Object.entries(foundTS.Session).forEach((obj) => {
-					this.list = this.byId(obj[1].ID + "Icon");
-					this.list.setSrc("sap-icon://notes")
-					this.byId("container-ICS_TimeSheet---View2--" + obj[1].ID + "-selectMulti").setEnabled(true)
-					this.byId("sessionList").setMode("MultiSelect");
-
+					if (obj[1].status) {
+						if (obj[1].status == "Leave") {
+							this.byId(obj[1].ID).setBlocked(true);
+						} else {
+							this.byId(obj[1].ID).setBlocked(false);
+							this.list = this.byId(obj[1].ID + "Icon");
+							this.list.setSrc("sap-icon://notes")
+							this.byId("container-ICS_TimeSheet---View2--" + obj[1].ID + "-selectMulti").setEnabled(true)
+							this.byId("sessionList").setMode("MultiSelect");
+						}
+					}
 				})
-
-			} else if (foundLeave) {
-				// var a = this.byId("container-ICS_TimeSheet---View2--AM")
-				Object.entries(foundLeave.Session).forEach((obj) => {
-					// this.list = this.byId(obj[1].ID + "Icon");
-					var eID = "container-ICS_TimeSheet---View2--" + obj[1].ID;
-					var element = document.getElementById(eID);
-					element.style.backgroundColor = '#F80404';
-
-					// debugger
-					// this.byId(obj[1].ID).setType("Inactive");
-
-				})
-
 			} else {
 				this.delBtn.setEnabled(false);
 				this.copyBtn.setEnabled(false);
@@ -216,7 +207,9 @@ sap.ui.define([
 					Object.entries(count[1].Session).forEach((sessions) => {
 						var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
 						if (String(fullDate) == String(selectDate)) {
-							if (sessions[1].status) {
+							if (sessions[1].status == "Leave") {
+
+							} else {
 								this.byId("container-ICS_TimeSheet---View2--" + sessions[1].ID + "-selectMulti").setSelected(true);
 								this.delBtn.setEnabled(true);
 								this.copyBtn.setEnabled(true);
@@ -272,8 +265,6 @@ sap.ui.define([
 		calendarCopy: function () {
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected()
-
-			// var oCtx = oEvent.getSource().getBindingContext();
 			var oCalendarCopy = Fragment.byId("copyTo", "calendarCopy");
 			var keys = Object.entries(this.holiday[0]);
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
@@ -281,11 +272,9 @@ sap.ui.define([
 			this.Status = "";
 			oCalendarCopy.removeAllSelectedDates()
 			oCalendarCopy.removeAllSpecialDates();
-			// this.specialDate = [];
 			keys.forEach((v) => {
 				v[1].forEach((j) => {
 					var fullDate = j.month + "/" + j.startDate + "/" + v[0];
-					// this.specialDate.push(fullDate);
 					oCalendarCopy.addSpecialDate(new sap.ui.unified.DateTypeRange({
 						startDate: new Date(fullDate),
 						endDate: new Date(fullDate),
@@ -296,7 +285,6 @@ sap.ui.define([
 			})
 
 			TSEntry.forEach((count) => {
-				// var status = [];
 				var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
 				if (getAM == true && getPM == true) {
 					this.Status = "All";
@@ -473,9 +461,8 @@ sap.ui.define([
 			};
 			this.oModel.setData(oData);
 		},
-		deleteSession: function () {
-			var cal = this.byId("calendar");
-			var date = cal.getSelectedDates()[0].getStartDate();
+		deleteSession: function (date) {
+			console.log(date)
 			var oModel = this.getView().getModel("timeSheet");
 			var oModelData = oModel.getProperty("/TS");
 			var getYear = date.getFullYear();
@@ -486,6 +473,7 @@ sap.ui.define([
 			var getAM = this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").getSelected();
 			var getPM = this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").getSelected();
 			var msg = 'Deleted.';
+
 			if (getAM == true && getPM == true) {
 				oModelData.splice(index, 1);
 				oModel.setProperty("/TS", oModelData);
@@ -506,6 +494,25 @@ sap.ui.define([
 			var selectDate = date;
 			this.timeSheetSelect(selectDate);
 			// location.reload();
+		},
+		handleDeleteSession: function () {
+			var cal = this.byId("calendar");
+			var date = cal.getSelectedDates()[0].getStartDate();
+			var currentDate = new Date();
+			currentDate.setHours(0, 0, 0, 0);
+			var checkDate = currentDate.getDate();
+
+			if (checkDate >= 5) {
+				if (date.getMonth() >= currentDate.getMonth()) {
+					this.deleteSession(date);
+				} else {
+					MessageToast.show("Time out to Time stamp");
+				}
+
+			} else {
+				this.deleteSession(date);
+			}
+
 		}
 	});
 });

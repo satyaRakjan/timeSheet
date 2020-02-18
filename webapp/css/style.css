@@ -24,9 +24,14 @@
     background-color: #F80404;
 }
 
+.sapUiCalItem.sapUiCalItemType01 {
+    background-color: #F8B504;
+}
+
 .sapUiUnifiedLegendItem.sapUiUnifiedLegendNonWorkingDay {
     display: none;
 }
+
 .sapMLIB {
-	background:#ffffff;
+    background: #ffffff;
 }

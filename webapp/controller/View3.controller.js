@@ -7,8 +7,7 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View3", {
-		onInit: function (oevent) {
-
+		onInit: function () {
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
 			oRouter.getRoute("RouteView3").attachPatternMatched(this._onObjectMatched, this);
 		},
@@ -27,17 +26,16 @@ sap.ui.define([
 				getSession = "PM";
 			}
 			var selectDate = new Date(this.date);
-			var checkDate = selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate();
+			var selFullDate = selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate();
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			var TSEntry = Object.entries(TS);
-			TSEntry.forEach((count) => {
-				Object.entries(count[1].Session).forEach((sessions) => {
-					var fullDate = count[1].Year + "" + count[1].Month + "" + count[1].Date;
-					if (checkDate == fullDate && sessions[1].ID == getSession) {
-						status = sessions[1].status;
+			var foundTS = TS.find(element => element.ID == selFullDate);
+			if (foundTS) {
+				Object.entries(foundTS.Session).forEach((obj) => {
+					if (obj[1].ID == getSession) {
+						status = obj[1].status;
 					}
 				})
-			})
+			}
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
 			});
@@ -50,14 +48,27 @@ sap.ui.define([
 			this.getView().setModel(oViewModel, "view");
 		},
 		heandleSession: function (oEvent) {
-			var getSelect = oEvent.getParameters().selectedItem.getText();
-			this.session = oEvent.getParameters().selectedItem.getText();
+			var date = new Date(this.date);
+			var checkDate = date.getFullYear() + "" + date.getMonth() + "" + date.getDate();
+			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
+			var foundTS = TS.find(element => element.ID == checkDate);
+			if (foundTS) {
+				Object.entries(foundTS.Session).forEach((obj) => {
+					if (obj[1].status == "Leave") {
+						this.session = this.session;
+						MessageToast.show("leave");
+
+					}
+				})
+			} else {
+				this.session = oEvent.getParameters().selectedItem.getText();
+			}
+
 			this.heandleTimeSheet();
 
 		},
 		ClearTS: function () {
 			var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-			console.log(TS)
 		},
 
 		addTimeSheet: function () {
@@ -92,7 +103,6 @@ sap.ui.define([
 			var msg = 'success.';
 			if (index >= 0) {
 				var getOModel = oModel.getProperty("/TS/" + index + "/Session");
-				console.log(getOModel)
 				var sessionKey = getOModel.findIndex(s => s.ID == getSession)
 				if (sessionKey >= 0) {
 					oModel.setProperty("/TS/" + index + "/Session/" + sessionKey, TSdata);
@@ -126,7 +136,7 @@ sap.ui.define([
 				oModel.updateBindings()
 				MessageToast.show(msg);
 			}
-		}, 
+		},
 		submitTS: function (oEvent) {
 			var date = new Date(this.date);
 			var getMonth = date.getMonth();
@@ -139,7 +149,7 @@ sap.ui.define([
 				if (getMonth >= currentDate.getMonth()) {
 					this.addTimeSheet();
 				} else {
-					MessageToast.show("Time out to Time stamp");
+					MessageToast.show("Time out to Delete");
 				}
 
 			} else {
