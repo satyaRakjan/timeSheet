@@ -70,6 +70,8 @@ sap.ui.define([
 					var el = document.querySelector("div[aria-labelledby='" + fullDate + "-Descr']");
 					if (count[1].Session[0].status == "Confirmed" && count[1].Session[1].status == "Confirmed") {
 						el.childNodes[2].style.color = 'black';
+					} else if (count[1].Session[0].status == "Leave" && count[1].Session[1].status == "Leave") {
+						el.childNodes[2].style.color = 'black';
 					} else if (count[1].Session[0].status == "Confirmed" && count[1].Session[1].status == "Leave") {
 						el.childNodes[2].style.color = 'black';
 					} else if (count[1].Session[0].status == "Leave" && count[1].Session[1].status == "Confirmed") {
@@ -89,6 +91,8 @@ sap.ui.define([
 		},
 		noTimeSheet: function () {
 			var today = new Date();
+			today.setHours(0, 0, 0, 0);
+
 			var dayNumber = document.querySelectorAll("div[sap-ui-date]");
 			var weekend = document.getElementsByClassName("sapMSPCMonthDay nonWorkingTimeframe");
 
@@ -115,34 +119,36 @@ sap.ui.define([
 			var TSEntry = Object.entries(TS);
 
 			TSEntry.forEach((count) => {
-					Object.entries(count[1].Session).forEach((sessions) => {
-						try {
-							if (sessions[1].status == "Leave") {
-								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-									startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-									endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-									title: sessions[1].ID,
-									tooltip: sessions[1].ID,
-									type: sap.ui.unified.CalendarDayType.Type02
-								}));
+				Object.entries(count[1].Session).forEach((sessions) => {
+					try {
+						if (sessions[1].status == "Leave") {
+							cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+								startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+								endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+								title: sessions[1].ID + "(" + sessions[1].TypeLeave + ")",
+								tooltip: sessions[1].ID,
+								type: sap.ui.unified.CalendarDayType.Type02
+							}));
 
-							} else {
-								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-									startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-									endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-									title: sessions[1].ID,
-									tooltip: sessions[1].ID,
-									type: sap.ui.unified.CalendarDayType.Type18
-								}));
-							}
-
-						} catch (err) {
+						} else {
+							cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+								startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+								endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+								title: sessions[1].ID,
+								tooltip: sessions[1].ID,
+								type: sap.ui.unified.CalendarDayType.Type18
+							}));
 
 						}
 
-					})
+					} catch (err) {
+
+					}
+
 				})
-		},
+			})
+							console.log(cal)
+ 		},
 
 		handleCell: function (oEvent) {
 			var cal = this.byId("SPC1");

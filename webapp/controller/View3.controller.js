@@ -149,7 +149,7 @@ sap.ui.define([
 				if (getMonth >= currentDate.getMonth()) {
 					this.addTimeSheet();
 				} else {
-					MessageToast.show("Time out to Delete");
+					MessageToast.show("Time out to Time stamp");
 				}
 
 			} else {

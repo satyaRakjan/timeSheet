@@ -434,7 +434,6 @@ sap.ui.define([
 						oModel.setProperty("/TS/" + indexPM + "/Session/1", TSPM);
 						MessageToast.show(msg);
 					} else {
-						console.log(TSPM)
 						newObject = {
 							"ID": fullDateSelect,
 							"Year": yearSelect,
@@ -446,7 +445,6 @@ sap.ui.define([
 						}
 						oModelData.push(newObject);
 						oModel.setProperty("/TS", oModelData);
-
 					}
 				}
 			}
@@ -462,7 +460,6 @@ sap.ui.define([
 			this.oModel.setData(oData);
 		},
 		deleteSession: function (date) {
-			console.log(date)
 			var oModel = this.getView().getModel("timeSheet");
 			var oModelData = oModel.getProperty("/TS");
 			var getYear = date.getFullYear();
@@ -501,18 +498,15 @@ sap.ui.define([
 			var currentDate = new Date();
 			currentDate.setHours(0, 0, 0, 0);
 			var checkDate = currentDate.getDate();
-
 			if (checkDate >= 5) {
 				if (date.getMonth() >= currentDate.getMonth()) {
 					this.deleteSession(date);
 				} else {
-					MessageToast.show("Time out to Time stamp");
+					MessageToast.show("Time out to Delete");
 				}
-
 			} else {
 				this.deleteSession(date);
 			}
-
 		}
 	});
 });
