@@ -1,0 +1,28 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified">
+	<Popover class="sapUiPopupWithPadding" placement="Auto" modal="false" title="{view>/title}" titleAlignment="Center"
+		ariaLabelledBy="master-title">
+		<!--<beginButton></beginButton>-->
+		<!--<endButton>-->
+		<!--	<Button class="roundButton" icon="sap-icon://decline"/>-->
+		<!--</endButton>-->
+		<subHeader>
+			<Text text="{view>/TypeLeave}"/>
+		</subHeader>
+		<content></content>
+		<footer>
+			<OverflowToolbar width="100%" height="auto" design="Auto" enabled="true" visible="true">
+				<ToolbarSpacer/>
+				<!--<Button type="Emphasized" text="Submit" press="onSubmitCopy">-->
+				<!--	<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>-->
+				<!--</Button>-->
+				<!--<Button type="Ghost" text="Clear" press="handleRemoveSelection">-->
+				<!--	<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>-->
+				<!--</Button>-->
+				<Button type="Default" text="Close" press="onClose">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
+			</OverflowToolbar>
+			<!--<Button text="Action-B" press="handleCloseButton"/>-->
+		</footer>
+	</Popover>
+</core:FragmentDefinition>

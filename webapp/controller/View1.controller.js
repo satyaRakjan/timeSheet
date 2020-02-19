@@ -1,8 +1,9 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
-	"sap/m/MessageToast"
-], function (Controller, JSONModel, MessageToast) {
+	"sap/m/MessageToast",
+	"sap/ui/core/Fragment"
+], function (Controller, JSONModel, MessageToast, Fragment) {
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View1", {
@@ -42,7 +43,12 @@ sap.ui.define([
 			this.handleTimeSheet();
 			setTimeout(function () {
 				this.onAfterRendering();
-			}.bind(this), 0);
+			}.bind(this), 100);
+		},
+		onExit: function () {
+			if (this.DetailPopover) {
+				this.DetailPopover.destroy();
+			}
 		},
 
 		timeSheetView: function () {
@@ -119,36 +125,36 @@ sap.ui.define([
 			var TSEntry = Object.entries(TS);
 
 			TSEntry.forEach((count) => {
-				Object.entries(count[1].Session).forEach((sessions) => {
-					try {
-						if (sessions[1].status == "Leave") {
-							cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-								startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-								endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-								title: sessions[1].ID + "(" + sessions[1].TypeLeave + ")",
-								tooltip: sessions[1].ID,
-								type: sap.ui.unified.CalendarDayType.Type02
-							}));
+					Object.entries(count[1].Session).forEach((sessions) => {
+						try {
+							if (sessions[1].status == "Leave") {
+								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+									startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+									endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+									title: sessions[1].ID + "(" + sessions[1].TypeLeave + ")",
+									tooltip: sessions[1].ID,
+									type: sap.ui.unified.CalendarDayType.Type02
+								}));
 
-						} else {
-							cal.addAppointment(new sap.ui.unified.CalendarAppointment({
-								startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
-								endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
-								title: sessions[1].ID,
-								tooltip: sessions[1].ID,
-								type: sap.ui.unified.CalendarDayType.Type18
-							}));
+							} else {
+								cal.addAppointment(new sap.ui.unified.CalendarAppointment({
+									startDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].startDate),
+									endDate: new Date(count[1].Year, count[1].Month, count[1].Date, sessions[1].endDate),
+									title: sessions[1].ID,
+									tooltip: sessions[1].ID,
+									type: sap.ui.unified.CalendarDayType.Type18
+								}));
+
+							}
+
+						} catch (err) {
 
 						}
 
-					} catch (err) {
-
-					}
-
+					})
 				})
-			})
-							console.log(cal)
- 		},
+				// console.log(cal)
+		},
 
 		handleCell: function (oEvent) {
 			var cal = this.byId("SPC1");
@@ -159,8 +165,7 @@ sap.ui.define([
 			var dateFormatted = dateFormat.format(date);
 			var result = this.specialDate.includes(dateFormatted);
 			if (result == true) {
-				var msg = 'this day is NonWorking.';
-				MessageToast.show(msg);
+				MessageToast.show("this day is NonWorking.");
 			} else {
 				var loRouter = sap.ui.core.UIComponent.getRouterFor(this);
 				date = String(date);
@@ -168,6 +173,91 @@ sap.ui.define([
 					getDate: date
 				});
 			}
-		}
+		},
+		handleAppointmentSelect: function (oEvent) {
+			try {
+				var oAppointment = oEvent.getParameter("appointment"),
+					oStartDate = oAppointment.getStartDate(),
+					oEndDate = oAppointment.getEndDate(),
+					oSession = oAppointment.getTooltip(),
+					bAllDate,
+					oTitle = "",
+					TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS"),
+					oViewModel;
+
+				if (oAppointment === undefined) {
+					return;
+				}
+				var selFullDate = String(oStartDate.getFullYear() + "" + oStartDate.getMonth() + "" + oStartDate.getDate());
+				var foundTS = TS.find(element => element.ID == selFullDate);
+				if (oAppointment.getTitle().length > 2) {
+					var foundSession = foundTS.Session.find(element => element.ID == oSession);
+					oTitle = "Leave"
+					oViewModel = new JSONModel({
+						title: oTitle,
+						endDate: oEndDate,
+						TypeLeave:foundSession.TypeLeave
+					});
+
+				} else {
+					oTitle = oAppointment.getTitle()
+					oViewModel = new JSONModel({
+						title: oTitle,
+						endDate: oEndDate
+					});
+				}
+
+				this.getView().setModel(oViewModel, "view");
+
+				if (!oAppointment.getSelected()) {
+					this.DetailPopover.close();
+					return;
+				}
+
+				if (!this.DetailPopover) {
+					Fragment.load({
+							id: "Detail",
+							name: "ICS_TimeSheet.ICS_TimeSheet.view.Detail",
+							controller: this
+						})
+						.then(function (oPopoverContent) {
+							this.DetailPopover = oPopoverContent;
+							// this.DetailPopover.setBindingContext(oAppointment.getBindingContext());
+							this.getView().addDependent(this.DetailPopover);
+							this.DetailPopover.openBy(oAppointment);
+						}.bind(this));
+				} else {
+					this.DetailPopover.openBy(oAppointment);
+				}
+
+			} catch (err) {
+
+			}
+
+			// console.log(oAppointment)
+			// var oButton = oEvent.getSource();
+			// if (!this.DetailPopover) {
+			// 	Fragment.load({
+			// 		id: "Detail",
+			// 		name: "ICS_TimeSheet.ICS_TimeSheet.view.Detail",
+			// 		controller: this
+			// 	}).then(function (oPopover) {
+			// 		this.DetailPopover = oPopover;
+			// 		this.getView().addDependent(this.DetailPopover);
+			// 		this.DetailPopover.
+			// 			(oButton);
+			// 	}.bind(this));
+			// } else {
+			// 	this.DetailPopover.openBy(oButton);
+			// }
+
+		},
+		onClose: function () {
+			// var oData = {
+			// 	selectedDates: []
+			// };
+			// this.oModel.setData(oData);
+			this.DetailPopover.close();
+		},
 	});
 });
