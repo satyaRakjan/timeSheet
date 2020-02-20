@@ -184,26 +184,35 @@ sap.ui.define([
 					oTitle = "",
 					TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS"),
 					oViewModel;
-
 				if (oAppointment === undefined) {
 					return;
 				}
+				var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+					pattern: " d MMM yyyy"
+				});
+				var dateFormatted = oDateFormat.format(oStartDate);
 				var selFullDate = String(oStartDate.getFullYear() + "" + oStartDate.getMonth() + "" + oStartDate.getDate());
 				var foundTS = TS.find(element => element.ID == selFullDate);
+				
 				if (oAppointment.getTitle().length > 2) {
 					var foundSession = foundTS.Session.find(element => element.ID == oSession);
 					oTitle = "Leave"
 					oViewModel = new JSONModel({
 						title: oTitle,
-						endDate: oEndDate,
-						TypeLeave:foundSession.TypeLeave
+						endDate: oEndDate.toTimeString().split(" ")[0],
+						startDate:oStartDate.toTimeString().split(" ")[0],
+						TypeLeave: foundSession.TypeLeave,
+						Date: dateFormatted,
+						Data: foundTS
 					});
-
 				} else {
 					oTitle = oAppointment.getTitle()
 					oViewModel = new JSONModel({
 						title: oTitle,
-						endDate: oEndDate
+						endDate: oEndDate.toTimeString().split(" ")[0],
+						startDate:oStartDate.toTimeString().split(" ")[0],
+						Date: dateFormatted,
+						Data: foundTS
 					});
 				}
 
@@ -253,6 +262,7 @@ sap.ui.define([
 
 		},
 		onClose: function () {
+			var cal = this.byId("SPC1");
 			// var oData = {
 			// 	selectedDates: []
 			// };

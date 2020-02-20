@@ -1,14 +1,92 @@
-<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified">
-	<Popover class="sapUiPopupWithPadding" placement="Auto" modal="false" title="{view>/title}" titleAlignment="Center"
-		ariaLabelledBy="master-title">
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:u="sap.ui.unified" xmlns:f="sap.f" xmlns:layout="sap.ui.layout"
+	xmlns:form="sap.ui.layout.form">
+	<Popover class="sapUiPopupWithPadding" placement="VerticalPreferredTop" modal="false" title="{view>/title}" titleAlignment="Center">
+		<!--<customHeader>-->
+		<!--	<Text text="{view>/TypeLeave}"/>-->
+		<!--</customHeader>-->
 		<!--<beginButton></beginButton>-->
 		<!--<endButton>-->
 		<!--	<Button class="roundButton" icon="sap-icon://decline"/>-->
 		<!--</endButton>-->
-		<subHeader>
-			<Text text="{view>/TypeLeave}"/>
-		</subHeader>
-		<content></content>
+		<!--<subHeader>-->
+		<!--	<Text text="{view>/TypeLeave}"/>-->
+		<!--</subHeader>-->
+		<content>
+			<f:DynamicPage id="dynamicPageId" stickySubheaderProvider="iconTabBar" class="sapUiNoContentPadding" toggleHeaderOnTitleClick="false">
+				<!-- DynamicPage Title -->
+				<f:title>
+					<f:DynamicPageTitle>
+						<f:heading>
+							<Title text="{view>/Date}"/>
+						</f:heading>
+						<!--<f:breadcrumbs>-->
+						<!--	<Breadcrumbs>-->
+						<!--		<Link text="Home"/>-->
+						<!--		<Link text="Page 1"/>-->
+						<!--		<Link text="Page 2"/>-->
+						<!--		<Link text="Page 3"/>-->
+						<!--		<Link text="Page 4"/>-->
+						<!--		<Link text="Page 5"/>-->
+						<!--	</Breadcrumbs>-->
+						<!--</f:breadcrumbs>-->
+						<f:expandedContent>
+							<Label text="{view>/TypeLeave}" visible="{= ${view>/title} === 'Leave'}"/>
+						</f:expandedContent>
+						<f:snappedContent>
+							<Label text="{view>/TypeLeave}"/>
+						</f:snappedContent>
+						<!--<f:snappedTitleOnMobile>-->
+						<!--	<Title text="Header Title On Phone"/>-->
+						<!--</f:snappedTitleOnMobile>-->
+						<f:content></f:content>
+					</f:DynamicPageTitle>
+				</f:title>
+				<!-- DynamicPage Header -->
+				<f:header>
+					<f:DynamicPageHeader pinnable="false">
+						<layout:HorizontalLayout allowWrapping="true">
+							<layout:VerticalLayout class="sapUiMediumMarginEnd">
+								<ObjectAttribute title="Form" text="{view>/startDate}"/>
+								<ObjectAttribute title="To" text="{view>/endDate}"/>
+							</layout:VerticalLayout>
+							<layout:VerticalLayout>
+								<ObjectAttribute title="Availability"/>
+								<ObjectStatus text="In Stock" state="Success"/>
+							</layout:VerticalLayout>
+						</layout:HorizontalLayout>
+					</f:DynamicPageHeader>
+				</f:header>
+				<!--<f:content>-->
+				<!--	<IconTabBar id="iconTabBar" expanded="{device>/isNoPhone}" class="sapUiResponsiveContentPadding"  showOverflowSelectList="false" tabDensityMode="Compact">-->
+				<!--		<items>-->
+				<!--			<IconTabFilter icon="sap-icon://hint">-->
+				<!--				<VBox class="sapUiSmallMargin" backgroundDesign="Solid">-->
+				<!--					<form:SimpleForm id="SimpleFormDisplayColumn_oneGroup" editable="false" layout="ColumnLayout" title="Address">-->
+				<!--						<form:content>-->
+				<!--							<Label text="Charge Type"/>-->
+				<!--							<Text id="nameText" text=""/>-->
+				<!--							<Label text="Charge Sub Type"/>-->
+				<!--							<Text text=""/>-->
+				<!--							<Label text="Transaction Sub Type"/>-->
+				<!--							<Text text=""/>-->
+				<!--							<Label text="Output Type"/>-->
+				<!--							<Text id="countryText" text=""/>-->
+				<!--							<Label text="Output Sub Type"/>-->
+				<!--							<Text text=""/>-->
+				<!--							<Label text="Output Type"/>-->
+				<!--							<Text text=""/>-->
+				<!--						</form:content>-->
+				<!--					</form:SimpleForm>-->
+				<!--				</VBox>-->
+				<!--			</IconTabFilter>-->
+				<!--			<IconTabFilter icon="sap-icon://expense-report">-->
+				<!--				<Text text="Attachments go here ..."/>-->
+				<!--			</IconTabFilter>-->
+				<!--		</items>-->
+				<!--	</IconTabBar>-->
+				<!--</f:content>-->
+			</f:DynamicPage>
+		</content>
 		<footer>
 			<OverflowToolbar width="100%" height="auto" design="Auto" enabled="true" visible="true">
 				<ToolbarSpacer/>
