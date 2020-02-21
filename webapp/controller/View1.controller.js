@@ -196,7 +196,6 @@ sap.ui.define([
 				var foundSession = foundTS.Session.find(element => element.ID == oSession);
 				if (oAppointment.getTitle().length > 2) {
 					oTitle = "Leave";
-					console.log(foundSession.status)
 					oViewModel = new JSONModel({
 						title: oTitle,
 						endDate: oEndDate.toTimeString().split(" ")[0],
@@ -208,7 +207,6 @@ sap.ui.define([
 					});
 				} else {
 					oTitle = oAppointment.getTitle();
-					console.log(foundSession.status)
 					oViewModel = new JSONModel({
 						title: oTitle,
 						endDate: oEndDate.toTimeString().split(" ")[0],

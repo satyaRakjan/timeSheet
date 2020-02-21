@@ -3,9 +3,10 @@ sap.ui.define([
 	'sap/ui/core/routing/History',
 	'sap/ui/model/json/JSONModel',
 	'sap/m/MessageToast',
-	'sap/ui/core/Fragment'
+	'sap/ui/core/Fragment',
+	'sap/m/MessageBox'
 
-], function (Controller, History, JSONModel, MessageToast, Fragment) {
+], function (Controller, History, JSONModel, MessageToast, Fragment, MessageBox) {
 	"use strict";
 
 	return Controller.extend("ICS_TimeSheet.ICS_TimeSheet.controller.View2", {
@@ -198,34 +199,28 @@ sap.ui.define([
 		},
 
 		onSelectionChange: function (oEvent) {
+			///edit///
 			var selected = oEvent.getParameter("selected");
 			var cal = this.byId("calendar");
 			var oSelectedDate = cal.getSelectedDates()[0];
 			var selectDate = oSelectedDate.getStartDate();
 			if (selected == true) {
 				var TS = this.getOwnerComponent().getModel("timeSheet").getProperty("/TS");
-				var TSEntry = Object.entries(TS);
-				TSEntry.forEach((count) => {
-					Object.entries(count[1].Session).forEach((sessions) => {
-						var fullDate = new Date(count[1].Year, count[1].Month, count[1].Date);
-						if (String(fullDate) == String(selectDate)) {
-							if (sessions[1].status == "Leave") {
-
-							} else {
-								this.byId("container-ICS_TimeSheet---View2--" + sessions[1].ID + "-selectMulti").setSelected(true);
-								this.delBtn.setEnabled(true);
-								this.copyBtn.setEnabled(true);
-							}
-
-						}
-					})
+				var selFullDate = String(selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate());
+				var foundTS = TS.find(element => element.ID == selFullDate);
+				Object.entries(foundTS.Session).forEach((obj) => {
+					console.log(obj[1].ID)
+					if (obj[1].status && obj[1].status !== "Leave") {
+						this.byId("container-ICS_TimeSheet---View2--" + obj[1].ID + "-selectMulti").setSelected(true);
+						this.delBtn.setEnabled(true);
+						this.copyBtn.setEnabled(true);
+					}
 				})
 			} else {
 				this.byId("container-ICS_TimeSheet---View2--AM-selectMulti").setSelected(false);
 				this.byId("container-ICS_TimeSheet---View2--PM-selectMulti").setSelected(false);
 				this.delBtn.setEnabled(false);
 				this.copyBtn.setEnabled(false);
-
 			}
 		},
 		onSelectionSession: function (oEvent) {
@@ -255,7 +250,6 @@ sap.ui.define([
 				this._oPopover.openBy(oButton);
 			}
 			this.calendarCopy();
-
 		},
 		onClose: function () {
 			var oData = {
@@ -336,7 +330,6 @@ sap.ui.define([
 				specialDateArr = oCalendar.getSpecialDates();
 
 			var currentDate = new Date();
-			// currentDate.setDate(5);
 			currentDate.setHours(0, 0, 0, 0);
 			var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: " d MMM yyyy"
@@ -349,7 +342,7 @@ sap.ui.define([
 					var dateFormatted = oDateFormat.format(oDate);
 					if (found) {
 						oCalendar.removeSelectedDate(i);
-						MessageToast.show("can't copy.");
+							MessageBox.error("can't copy.");
 					} else if (currentDate.getDate() >= 5) {
 						if (oDate.getMonth() >= currentDate.getMonth()) {
 							oData.selectedDates.push({
@@ -358,7 +351,7 @@ sap.ui.define([
 							oData.Date.push(oDate)
 						} else {
 							oCalendar.removeSelectedDate(i)
-							MessageToast.show("Time out to Time stamp");
+								MessageBox.error("Time out to Time stamp");
 						}
 
 					} else {
@@ -409,12 +402,12 @@ sap.ui.define([
 					}
 					oModelData.push(newObject);
 					oModel.setProperty("/TS", oModelData);
-					MessageToast.show(msg);
+					MessageBox.success(msg);
 				} else if (this.Status == "AM") {
 					var indexAM = oModelData.findIndex(s => s.ID == fullDateSelect);
 					if (indexAM >= 0) {
 						oModel.setProperty("/TS/" + indexAM + "/Session/0", TSAM);
-						MessageToast.show(msg);
+						MessageBox.success(msg);
 					} else {
 						newObject = {
 							"ID": fullDateSelect,
@@ -427,14 +420,14 @@ sap.ui.define([
 						}
 						oModelData.push(newObject);
 						oModel.setProperty("/TS", oModelData);
-						MessageToast.show(msg);
+						MessageBox.success(msg);
 					}
 
 				} else if (this.Status == "PM") {
 					var indexPM = oModelData.findIndex(s => s.ID == fullDateSelect);
 					if (indexPM >= 0) {
 						oModel.setProperty("/TS/" + indexPM + "/Session/1", TSPM);
-						MessageToast.show(msg);
+						MessageBox.success(msg);
 					} else {
 						newObject = {
 							"ID": fullDateSelect,
@@ -476,19 +469,19 @@ sap.ui.define([
 			if (getAM == true && getPM == true) {
 				oModelData.splice(index, 1);
 				oModel.setProperty("/TS", oModelData);
-				MessageToast.show(msg);
+				MessageBox.success(msg);
 			} else if (getAM == true) {
 				// getOModel.splice(0, 1);
 				oModel.setProperty("/TS/" + index + "/Session/0", {
 					ID: "AM"
 				});
-				MessageToast.show(msg);
+				MessageBox.success(msg);
 			} else if (getPM == true) {
 				// getOModel.splice(1, 1);
 				oModel.setProperty("/TS/" + index + "/Session/1", {
 					ID: "PM"
 				});
-				MessageToast.show(msg);
+				MessageBox.success(msg);
 			}
 			var selectDate = date;
 			this.timeSheetSelect(selectDate);
@@ -504,7 +497,7 @@ sap.ui.define([
 				if (date.getMonth() >= currentDate.getMonth()) {
 					this.deleteSession(date);
 				} else {
-					MessageToast.show("Time out to Delete");
+					MessageBox.error("Time out to Delete");
 				}
 			} else {
 				this.deleteSession(date);
