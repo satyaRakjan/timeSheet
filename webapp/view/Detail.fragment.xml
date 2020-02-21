@@ -31,6 +31,7 @@
 						<!--</f:breadcrumbs>-->
 						<f:expandedContent>
 							<Label text="{view>/TypeLeave}" visible="{= ${view>/title} === 'Leave'}"/>
+							<Label text="Project Name:" visible="{= ${view>/title} !== 'Leave'}"/>
 						</f:expandedContent>
 						<f:snappedContent>
 							<Label text="{view>/TypeLeave}"/>
@@ -38,7 +39,13 @@
 						<!--<f:snappedTitleOnMobile>-->
 						<!--	<Title text="Header Title On Phone"/>-->
 						<!--</f:snappedTitleOnMobile>-->
-						<f:content></f:content>
+						<f:content>
+							<!--<OverflowToolbar>-->
+							<!--	<GenericTag text="SR" status="Error" press="onGenericTagPress" design="StatusIconHidden">-->
+							<!--		<ObjectNumber number="2" unit="M" emphasized="false" state="Error"/>-->
+							<!--	</GenericTag>-->
+							<!--</OverflowToolbar>-->
+						</f:content>
 					</f:DynamicPageTitle>
 				</f:title>
 				<!-- DynamicPage Header -->
@@ -50,8 +57,10 @@
 								<ObjectAttribute title="To" text="{view>/endDate}"/>
 							</layout:VerticalLayout>
 							<layout:VerticalLayout>
-								<ObjectAttribute title="Availability"/>
-								<ObjectStatus text="In Stock" state="Success"/>
+								<!--<GenericTag text="{view>/Session/status}" status="Success" ></GenericTag>-->
+								<GenericTag
+									text="{= ${view>/title} === 'Leave' ? 'Leave' :${view>/Session/status} === 'Confirmed' ? 'Confirmed':${view>/Session/status} === 'Notconfirmed' ? 'Notconfirmed' :undefined}"
+									status="{= ${view>/title} === 'Leave' ? 'Error' :${view>/Session/status} === 'Confirmed' ? 'Success':${view>/Session/status} === 'Notconfirmed' ? 'Warning' :undefined}"></GenericTag>
 							</layout:VerticalLayout>
 						</layout:HorizontalLayout>
 					</f:DynamicPageHeader>
@@ -90,9 +99,9 @@
 		<footer>
 			<OverflowToolbar width="100%" height="auto" design="Auto" enabled="true" visible="true">
 				<ToolbarSpacer/>
-				<!--<Button type="Emphasized" text="Submit" press="onSubmitCopy">-->
-				<!--	<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>-->
-				<!--</Button>-->
+				<Button type="Emphasized" text="edit" press="onEdit">
+					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
+				</Button>
 				<!--<Button type="Ghost" text="Clear" press="handleRemoveSelection">-->
 				<!--	<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>-->
 				<!--</Button>-->

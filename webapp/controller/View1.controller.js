@@ -193,31 +193,34 @@ sap.ui.define([
 				var dateFormatted = oDateFormat.format(oStartDate);
 				var selFullDate = String(oStartDate.getFullYear() + "" + oStartDate.getMonth() + "" + oStartDate.getDate());
 				var foundTS = TS.find(element => element.ID == selFullDate);
-				
+				var foundSession = foundTS.Session.find(element => element.ID == oSession);
 				if (oAppointment.getTitle().length > 2) {
-					var foundSession = foundTS.Session.find(element => element.ID == oSession);
-					oTitle = "Leave"
+					oTitle = "Leave";
+					console.log(foundSession.status)
 					oViewModel = new JSONModel({
 						title: oTitle,
 						endDate: oEndDate.toTimeString().split(" ")[0],
-						startDate:oStartDate.toTimeString().split(" ")[0],
+						startDate: oStartDate.toTimeString().split(" ")[0],
 						TypeLeave: foundSession.TypeLeave,
 						Date: dateFormatted,
-						Data: foundTS
+						Data: foundTS,
+						Session: foundSession
 					});
 				} else {
-					oTitle = oAppointment.getTitle()
+					oTitle = oAppointment.getTitle();
+					console.log(foundSession.status)
 					oViewModel = new JSONModel({
 						title: oTitle,
 						endDate: oEndDate.toTimeString().split(" ")[0],
-						startDate:oStartDate.toTimeString().split(" ")[0],
+						startDate: oStartDate.toTimeString().split(" ")[0],
 						Date: dateFormatted,
-						Data: foundTS
+						Data: foundTS,
+						Session: foundSession
 					});
 				}
-
+				this.Sesson = oTitle;
+				this.Date = String(new Date(dateFormatted));
 				this.getView().setModel(oViewModel, "view");
-
 				if (!oAppointment.getSelected()) {
 					this.DetailPopover.close();
 					return;
@@ -261,8 +264,28 @@ sap.ui.define([
 			// }
 
 		},
+		onEdit: function () {
+			if (this.Sesson == "Leave") {
+				MessageToast.show("Leave can't");
+
+			} else {
+				var getSession = "";
+
+				if (this.Sesson == "AM") {
+					getSession = "Morning";
+				} else if (this.Sesson == "PM") {
+					getSession = "Afternoon";
+				}
+				var loRouter = sap.ui.core.UIComponent.getRouterFor(this);
+				this.onClose();
+
+				loRouter.navTo("RouteView3", {
+					session: getSession,
+					date: this.Date
+				});
+			}
+		},
 		onClose: function () {
-			var cal = this.byId("SPC1");
 			// var oData = {
 			// 	selectedDates: []
 			// };

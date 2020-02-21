@@ -159,8 +159,10 @@ sap.ui.define([
 		},
 
 		onNavBack: function () {
+			var oHistory = History.getInstance();
+			var getRout =oHistory.getPreviousHash().split(/[/]/)[0];
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			oRouter.navTo("RouteView2", {
+			oRouter.navTo(getRout, {
 				getDate: this.date
 			});
 

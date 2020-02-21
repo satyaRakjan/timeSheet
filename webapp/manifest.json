@@ -96,7 +96,7 @@
 			},
 			"routes": [{
 					"name": "RouteView1",
-					"pattern": "RouteView1",
+					"pattern": "RouteView1/{getDate}",
 					"target": ["TargetView1"]
 				}, {
 					"name": "RouteView2",

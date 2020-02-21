@@ -174,7 +174,9 @@ sap.ui.define([
 		},
 		onNavBack: function () {
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			oRouter.navTo("RouteView1");
+			oRouter.navTo("RouteView1", {
+				getDate: "null"
+			});
 		},
 		AMPress: function (oEvent) {
 			var cal = this.byId("calendar");
