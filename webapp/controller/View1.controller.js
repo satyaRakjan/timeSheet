@@ -266,7 +266,7 @@ sap.ui.define([
 		},
 		onEdit: function () {
 			if (this.Sesson == "Leave") {
-				MessageToast.show("Leave can't");
+				MessageToast.show("Leave can't edit");
 
 			} else {
 				var getSession = "";
@@ -286,10 +286,6 @@ sap.ui.define([
 			}
 		},
 		onClose: function () {
-			// var oData = {
-			// 	selectedDates: []
-			// };
-			// this.oModel.setData(oData);
 			this.DetailPopover.close();
 		},
 	});

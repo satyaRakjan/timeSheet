@@ -16,6 +16,7 @@ sap.ui.define([
 			this.date = oEvent.getParameter("arguments").date;
 			this.session = oEvent.getParameter("arguments").session;
 			this.heandleTimeSheet();
+			console
 		},
 		heandleTimeSheet: function () {
 			var getSession = "";
@@ -160,11 +161,20 @@ sap.ui.define([
 
 		onNavBack: function () {
 			var oHistory = History.getInstance();
-			var getRout =oHistory.getPreviousHash().split(/[/]/)[0];
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-			oRouter.navTo(getRout, {
-				getDate: this.date
-			});
+
+			try {
+				var getRout = oHistory.getPreviousHash().split(/[/]/)[0];
+				oRouter.navTo(getRout, {
+					getDate: this.date
+				});
+
+			} catch (err) {
+				oRouter.navTo("RouteView2", {
+					getDate: this.date
+				});
+
+			}
 
 		}
 	});
