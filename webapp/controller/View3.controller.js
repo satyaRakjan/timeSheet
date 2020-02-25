@@ -160,22 +160,11 @@ sap.ui.define([
 		},
 
 		onNavBack: function () {
-			var oHistory = History.getInstance();
+			// var oHistory = History.getInstance();
 			var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-
-			try {
-				var getRout = oHistory.getPreviousHash().split(/[/]/)[0];
-				oRouter.navTo(getRout, {
-					getDate: this.date
-				});
-
-			} catch (err) {
-				oRouter.navTo("RouteView2", {
-					getDate: this.date
-				});
-
-			}
-
+			oRouter.navTo("RouteView2", {
+				getDate: this.date
+			});
 		}
 	});
 });
