@@ -16,15 +16,19 @@ sap.ui.define([
 			this.date = oEvent.getParameter("arguments").date;
 			this.session = oEvent.getParameter("arguments").session;
 			this.heandleTimeSheet();
-			console
 		},
 		heandleTimeSheet: function () {
 			var getSession = "";
 			var status = "";
+			// MessageToast.show(this.date);
 			if (this.session == "Morning") {
 				getSession = "AM";
+				// MessageToast.show(getSession);
+
 			} else if (this.session == "Afternoon") {
 				getSession = "PM";
+				// MessageToast.show(getSession);
+
 			}
 			var selectDate = new Date(this.date);
 			var selFullDate = selectDate.getFullYear() + "" + selectDate.getMonth() + "" + selectDate.getDate();

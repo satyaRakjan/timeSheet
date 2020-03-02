@@ -191,6 +191,7 @@ sap.ui.define([
 					pattern: " d MMM yyyy"
 				});
 				var dateFormatted = oDateFormat.format(oStartDate);
+
 				var selFullDate = String(oStartDate.getFullYear() + "" + oStartDate.getMonth() + "" + oStartDate.getDate());
 				var foundTS = TS.find(element => element.ID == selFullDate);
 				var foundSession = foundTS.Session.find(element => element.ID == oSession);
@@ -217,7 +218,7 @@ sap.ui.define([
 					});
 				}
 				this.Sesson = oTitle;
-				this.Date = String(new Date(dateFormatted));
+				this.strDate = String(new Date(oStartDate))
 				this.getView().setModel(oViewModel, "view");
 				if (!oAppointment.getSelected()) {
 					this.DetailPopover.close();
@@ -274,13 +275,14 @@ sap.ui.define([
 				} else if (this.Sesson == "PM") {
 					getSession = "Afternoon";
 				}
-				var loRouter = sap.ui.core.UIComponent.getRouterFor(this);
-				this.onClose();
 
+				var loRouter = sap.ui.core.UIComponent.getRouterFor(this);
 				loRouter.navTo("RouteView3", {
 					session: getSession,
-					date: this.Date
+					date: this.strDate
 				});
+				this.onClose();
+
 			}
 		},
 		onClose: function () {
